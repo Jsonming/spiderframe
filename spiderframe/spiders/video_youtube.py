@@ -8,5 +8,5 @@ class VideoYoutubeSpider(scrapy.Spider):
     allowed_domains = ['www.youtube.com']
     start_urls = ['https://www.youtube.com/watch?v=N_DCZ0I0gv4']
 
-    # def parse(self, response):
-    #     pool.map(pytube_download, ['https://www.youtube.com/watch?v=N_DCZ0I0gv4'])
+    def parse(self, response):
+       pytube_download('https://www.youtube.com/watch?v=N_DCZ0I0gv4')

@@ -8,16 +8,10 @@
 import os
 import sys
 
-import gevent.monkey
 import you_get
-from gevent.pool import Pool
 from pytube import YouTube
 
 from . import settings
-
-# gevent.monkey.patch_all()
-#
-# pool = Pool(10)
 
 
 def you_get_download(url=None, path=None):
