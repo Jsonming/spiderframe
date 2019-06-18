@@ -17,10 +17,10 @@ SPIDER_MODULES = ['spiderframe.spiders']
 NEWSPIDER_MODULE = 'spiderframe.spiders'
 
 # log info setting
-now_time = datetime.datetime.now()
-log_file_path = "log/scrapy_{}{}{}.log".format(now_time.year, now_time.month, now_time.day)
-LOG_LEVEL = 'INFO'
-LOG_FILE = log_file_path
+# now_time = datetime.datetime.now()
+# log_file_path = "log/scrapy_{}{}{}.log".format(now_time.year, now_time.month, now_time.day)
+# LOG_LEVEL = 'INFO'
+# LOG_FILE = log_file_path
 
 # mysql setting info
 MYSQL_DB_NAME = 'spiderframe'
@@ -48,7 +48,7 @@ IMAGES_STORE = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'spiderf
 # Configure a delay for requests for the same website (default: 0)
 # See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 0.3
+DOWNLOAD_DELAY = 20
 
 # The download delay setting will honor only one of:
 # CONCURRENT_REQUESTS_PER_DOMAIN = 16

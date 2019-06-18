@@ -34,7 +34,7 @@ def you_get_download(url=None, path=None):
 
 def pytube_download(url=None, path=None):
     """
-        youtube专用下载器，NB的地方在与，如果有字幕流可以下载字幕， 与you_get相同有音频流可以下载音频
+        youtube专用下载器，NB的地方在于如果有字幕流，可以下载字幕， 与you_get相同有音频流可以下载音频
     :param url: 视频url
     :param path: 存储路径
     :return:
@@ -55,5 +55,5 @@ def googel_img_download(word=None, path=None, limit=None):
     :return:
     """
     image_store = settings.IMAGES_STORE
-    command = "googleimagesdownload -k {} -o {} -l 10".format(word, image_store)
+    command = 'googleimagesdownload -k {} -o {} -l 10  --chromedriver="D:\chromedriver_win32"'.format(word, image_store)
     os.system(command)

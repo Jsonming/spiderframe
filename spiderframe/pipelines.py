@@ -16,7 +16,7 @@ from spiderframe.spiders.vietnam_news_vn_link import VietnamNewsVnLinkSpider
 from spiderframe.spiders.video_bilibili_link import VideoBilibiliLinkSpider
 from spiderframe.spiders.video_baidu_link import VideoBaiduLinkSpider
 from spiderframe.spiders.vietnam_news_vn_content import VietnamNewsVnContentSpider
-
+from spiderframe.spiders.vietnam_speaking_sentence import VietnamSpeakingSentenceSpider
 
 from . import settings
 
@@ -59,13 +59,13 @@ class MySQLPipeline(object):
         self.db_conn.commit()
         self.db_conn.close()
 
-    def insert_db(self, item):
+    def insert_db(self, table_name, item):
         values = (
             item['url'],
             item['content'],
         )
 
-        sql = 'INSERT INTO vietnam_news_vn_content(url, content) VALUES(%s,%s)'
+        sql = 'INSERT INTO {db_name}(url, content) VALUES(%s,%s)'.format(db_name=table_name)  # 将表名设置为参数形式
         self.db_cur.execute(sql, values)
         self.db_conn.commit()
 
@@ -77,8 +77,8 @@ class MySQLPipeline(object):
                 sql = 'INSERT INTO Img(img_name, url) VALUES(%s,%s)'
                 self.db_cur.execute(sql, (thumb_guid, url))
 
-        if isinstance(spider, VietnamNewsVnContentSpider):
-            self.insert_db(item)
+        if isinstance(spider, VietnamSpeakingSentenceSpider):
+            self.insert_db('vietnam_speaking_sentence', item)
 
         return item
 
@@ -123,8 +123,8 @@ class RedisPipeline(object):
         if spider.name.endswith('link'):
             if not self.check_url_crawled(item['url']):
                 self.insert_db(spider.name, item['url'])
-        elif isinstance(spider, VietnamNewsVnContentSpider):
-            if 'content' not in item:
+        elif isinstance(spider, VietnamSpeakingSentenceSpider):
+            if not item['content']:
                 self.insert_db(spider.name, item['url'])
         return item
 
