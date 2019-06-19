@@ -33,10 +33,10 @@ class ImageBaiduSpider(scrapy.Spider):
         item["image_urls"] = img_urls
         yield item
 
-        total_num = resp.get("displayNum")
-        current_num = re.findall('&pn=(.*?)&rn=30', response.url)[0]
-        if int(current_num) < int(total_num):
-            url = "https://image.baidu.com/search/acjson?tn=resultjson_com&ipn=rj&ct=201326592&is=&fp=result&queryWord={category}&cl=2&lm=-1&ie=utf-8&oe=utf-8&adpicid=&st=-1&z=&ic=&hd=&latest=&copyright=&word={category}&s=&se=&tab=&width=&height=&face=&istype=&qc=&nc=1&fr=&expermode=&force=&pn={page}&rn=30&gsm=1e&1560505489300=".format(
-                category=quote(self.category), page=int(current_num)+30)
-            yield scrapy.Request(url=url, callback=self.parse, dont_filter=True)
+        # total_num = resp.get("displayNum")
+        # current_num = re.findall('&pn=(.*?)&rn=30', response.url)[0]
+        # if int(current_num) < int(total_num):
+        #     url = "https://image.baidu.com/search/acjson?tn=resultjson_com&ipn=rj&ct=201326592&is=&fp=result&queryWord={category}&cl=2&lm=-1&ie=utf-8&oe=utf-8&adpicid=&st=-1&z=&ic=&hd=&latest=&copyright=&word={category}&s=&se=&tab=&width=&height=&face=&istype=&qc=&nc=1&fr=&expermode=&force=&pn={page}&rn=30&gsm=1e&1560505489300=".format(
+        #         category=quote(self.category), page=int(current_num)+30)
+        #     yield scrapy.Request(url=url, callback=self.parse, dont_filter=True)
 
