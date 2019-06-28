@@ -112,8 +112,8 @@ class RedisPipeline(object):
 
     def check_url_crawled(self, url):
         fingerprint = self.generate_fingerprint(url)
-        if not self.fingerprint_exist('fingerprint_temp', fingerprint):
-            self.insert_fingerprint('fingerprint_temp', fingerprint)
+        if not self.fingerprint_exist('fingerprint', fingerprint):
+            self.insert_fingerprint('fingerprint', fingerprint)
             return False
         else:
             print("指纹重复")
