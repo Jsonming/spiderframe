@@ -10,10 +10,8 @@ class VietnamSpeakingSentenceSpider(RedisSpider):
     # start_urls = ['https://vi.glosbe.com/zh/vi/爸爸']
     redis_key = 'vietnam_speaking_url'
     custom_settings = {
-        # 指定redis数据库的连接参数
         'REDIS_HOST': '123.56.11.156',
         'REDIS_PORT': 6379,
-        # 指定 redis链接密码，和使用哪一个数据库
         'REDIS_PARAMS': {
             'password': '',
             'db': 0
