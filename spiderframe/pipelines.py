@@ -35,9 +35,9 @@ class SpiderframePipeline(object):
                 f.write(string + "\n")
 
         # if isinstance(spider, VietnamNewsVnLinkSpider):
-            # if item['url']:
-            #     save_text(item['url'])
-            # pass
+        # if item['url']:
+        #     save_text(item['url'])
+        # pass
 
         return item
 
@@ -79,7 +79,8 @@ class MySQLPipeline(object):
                 self.db_cur.execute(sql, (thumb_guid, url))
 
         if isinstance(spider, ChinaNewsPeopleContentSpider):
-            self.insert_db(spider.name, item)
+            if not item["content"]:
+                self.insert_db(spider.name, item)
 
         return item
 
