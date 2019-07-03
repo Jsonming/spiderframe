@@ -18,6 +18,7 @@ from spiderframe.spiders.video_baidu_link import VideoBaiduLinkSpider
 from spiderframe.spiders.vietnam_news_vn_content import VietnamNewsVnContentSpider
 from spiderframe.spiders.vietnam_speaking_sentence import VietnamSpeakingSentenceSpider
 from spiderframe.spiders.china_news_people_content import ChinaNewsPeopleContentSpider
+from spiderframe.spiders.English_speaking_ted_link import EnglishSpeakingTedLinkSpider
 
 from . import settings
 
@@ -78,8 +79,8 @@ class MySQLPipeline(object):
                 sql = 'INSERT INTO Img(img_name, url) VALUES(%s,%s)'
                 self.db_cur.execute(sql, (thumb_guid, url))
 
-        if isinstance(spider, ChinaNewsPeopleContentSpider):
-            if not item["content"]:
+        if spider.name.endswith("content"):
+            if item["content"]:
                 self.insert_db(spider.name, item)
 
         return item
@@ -125,7 +126,7 @@ class RedisPipeline(object):
         if spider.name.endswith('link'):
             if not self.check_url_crawled(item['url']):
                 self.insert_db(spider.name, item['url'])
-        elif isinstance(spider, ChinaNewsPeopleContentSpider):
+        elif spider.name.endswith("content"):
             if not item['content']:
                 self.insert_db(spider.name, item['url'])
         return item
