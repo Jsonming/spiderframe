@@ -9,7 +9,7 @@ class ChinaNewsPeopleContentSpider(RedisSpider):
     allowed_domains = ['culture.people.com']
     start_urls = [
         # 'http://politics.people.com.cn/n1/2019/0701/c1024-31204325.html',
-        "http://politics.people.com.cn/n1/2019/0620/c1001-31170789.html"
+        "http://sports.people.com.cn/n/2013/0708/c35862-22119921.html"
     ]
 
     redis_key = 'china_news_people_link'
@@ -23,9 +23,19 @@ class ChinaNewsPeopleContentSpider(RedisSpider):
     }
 
     def parse(self, response):
-        content = response.xpath('//div[@class="box_con"]/p/text()').extract()
+        content = []
+        content.extend(response.xpath('//div[@class="box_con"]//p/text()').extract())
+        content.extend(response.xpath('//div[@class="artDet"]//p/text()').extract())
+        content.extend(response.xpath('//div[@class="content clear clearfix"]//p/text()').extract())
+        content.extend(response.xpath('//div[@class="show_text"]//p/text()').extract())
+        content.extend(response.xpath('//div[@class="gray box_text"]//p/text()').extract())
+        content.extend(response.xpath('//div[@class="text"]//p/text()').extract())
+        content.extend(response.xpath('//div[@class="fl text_con_left"]//p/text()').extract())
+        content.extend(response.xpath('//div[@class="text width978 clearfix"]//p/text()').extract())
+
         text = ''.join(content).replace('\r', '').replace('\n', '').replace('\t', '')
-        item = SpiderframeItem()
-        item["url"] = response.url
-        item["content"] = text
-        yield item
+        if "v.people.cn" not in response.url:
+            item = SpiderframeItem()
+            item["url"] = response.url
+            item["content"] = text
+            yield item
