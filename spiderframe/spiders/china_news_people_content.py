@@ -4,23 +4,23 @@ from spiderframe.items import SpiderframeItem
 from scrapy_redis.spiders import RedisSpider
 
 
-class ChinaNewsPeopleContentSpider(RedisSpider):
+class ChinaNewsPeopleContentSpider(scrapy.Spider):
     name = 'china_news_people_content'
     allowed_domains = ['culture.people.com']
     start_urls = [
         # 'http://politics.people.com.cn/n1/2019/0701/c1024-31204325.html',
-        "http://sports.people.com.cn/n/2013/0708/c35862-22119921.html"
+        "http://legal.people.com.cn/GB/223276/203009/427332/427481/index.html"
     ]
 
-    redis_key = 'china_news_people_link'
-    custom_settings = {
-        'REDIS_HOST': '123.56.11.156',
-        'REDIS_PORT': 6379,
-        'REDIS_PARAMS': {
-            'password': '',
-            'db': 0
-        },
-    }
+    # redis_key = 'china_news_people_content'
+    # custom_settings = {
+    #     'REDIS_HOST': '123.56.11.156',
+    #     'REDIS_PORT': 6379,
+    #     'REDIS_PARAMS': {
+    #         'password': '',
+    #         'db': 0
+    #     },
+    # }
 
     def parse(self, response):
         content = []
@@ -32,6 +32,9 @@ class ChinaNewsPeopleContentSpider(RedisSpider):
         content.extend(response.xpath('//div[@class="text"]//p/text()').extract())
         content.extend(response.xpath('//div[@class="fl text_con_left"]//p/text()').extract())
         content.extend(response.xpath('//div[@class="text width978 clearfix"]//p/text()').extract())
+        content.extend(response.xpath('//div[@id="p_live"]//text()').extract())
+        content.extend(response.xpath('//div[@class="p4_1"]//p/text()').extract())
+        content.extend(response.xpath('//ul[@id="content"]//text()').extract())
 
         text = ''.join(content).replace('\r', '').replace('\n', '').replace('\t', '')
         if "v.people.cn" not in response.url:
