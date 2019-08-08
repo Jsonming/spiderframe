@@ -16,6 +16,11 @@ class SpiderframeItem(scrapy.Item):
     url = scrapy.Field()
     content = scrapy.Field()
 
+    item_id = scrapy.Field()
+    item_name = scrapy.Field()
+    item_time_long = scrapy.Field()
+    item_time_unit = scrapy.Field()
+
 
 class ImgsItem(scrapy.Item):
     # define the fields for your item here like:

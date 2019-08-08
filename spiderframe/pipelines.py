@@ -19,6 +19,7 @@ from spiderframe.spiders.vietnam_news_vn_content import VietnamNewsVnContentSpid
 from spiderframe.spiders.vietnam_speaking_sentence import VietnamSpeakingSentenceSpider
 from spiderframe.spiders.china_news_people_content import ChinaNewsPeopleContentSpider
 from spiderframe.spiders.English_speaking_ted_link import EnglishSpeakingTedLinkSpider
+from spiderframe.spiders.china_speechocean_link import ChinaSpeechoceanLinkSpider
 
 from . import settings
 
@@ -82,7 +83,19 @@ class MySQLPipeline(object):
         if spider.name.endswith("content"):
             if item["content"]:
                 self.insert_db(spider.name, item)
+        elif isinstance(spider, ChinaSpeechoceanLinkSpider):
+            values = (
+                item['item_id'],
+                item['item_name'],
+                item['item_time_long'],
+                item['item_time_unit'],
+                item['url'],
+            )
 
+            sql = 'INSERT INTO {db_name}(product_id,product_name,product_time_long,product_time_unit,' \
+                  ' product_url) VALUES(%s,%s,%s,%s,%s)'.format(db_name=spider.name)  # 将表名设置为参数形式
+            self.db_cur.execute(sql, values)
+            self.db_conn.commit()
         return item
 
 
