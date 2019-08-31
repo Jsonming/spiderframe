@@ -6,7 +6,7 @@ from spiderframe.items import SpiderframeItem
 class VietnamTikiLinkSpider(scrapy.Spider):
     name = 'vietnam_tiki_link'
     allowed_domains = ['tiki.vn']
-    start_urls = ['https://tiki.vn/search?q=sách&ref=searchBar&page={}'.format(i) for i in range(30, 35)]
+    start_urls = ['https://tiki.vn/search?q=Mì+ăn+liền&page&ref=searchBar&page={}'.format(i) for i in range(1, 30)]
 
     def parse(self, response):
         urls = response.xpath('//div[@class="product-box-list"]/div/a/@href').extract()
