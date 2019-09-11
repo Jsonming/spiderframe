@@ -112,15 +112,3 @@ class IndiaHindiLinkSpider(scrapy.Spider):
                                                                         "category_creation_id": category_creation_id},
                                      callback=self.parse, dont_filter=True)
 
-    # def parse_item(self, response):
-    #     image_url = ["https:" + url for url in images]
-    #     item = ImgsItem()
-    #     item["category"] = "hindi"
-    #     item["image_urls"] = image_url
-    #     yield item
-
-        # url = "https://hindi.webdunia.com/core/home-page/more-category-news"
-        # form_data = {"page": "1", "item_per_page": '', "category_id": category_id,
-        #              "category_creation_id": category_creation_id}
-        # yield scrapy.FormRequest(url=url, formdata=form_data, meta={"page": 1}, callback=self.parse_item,
-        #                          dont_filter=True)
