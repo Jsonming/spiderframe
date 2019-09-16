@@ -31,7 +31,7 @@ class VideoDouyinLinkSpider(scrapy.Spider):
         yield scrapy.Request(url=url_detail, callback=self.parse_item)
 
     def parse_item(self, response):
-        print(response.text)  # TODO 抖音没有打通， 以后专门抽时间解决
+        print(response.text)  # TODO 抖音没有打通， 以后专门抽时间解决APP问题
         # list = json.loads(response.text)['aweme_list']
         # has_more = json.loads(response.text)['has_more']
         #
