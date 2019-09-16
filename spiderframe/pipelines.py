@@ -36,11 +36,6 @@ class SpiderframePipeline(object):
             with open(file, 'a', encoding='utf8')as f:
                 f.write(string + "\n")
 
-        # if isinstance(spider, VietnamNewsVnLinkSpider):
-        # if item['url']:
-        #     save_text(item['url'])
-        # pass
-
         return item
 
 
