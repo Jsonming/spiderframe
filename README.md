@@ -1,7 +1,7 @@
-#SpiderFrame
+# SpiderFrame
 
-##介绍
-这是爬虫框架集合，是在scrapy 基础上添加的，主要做的工作：
+## 介绍
+    这是爬虫框架集合，是在scrapy 基础上添加的，主要做的工作：
 * scrapy爬取基本配置：redis通道，MySQL通道，本地存储，日志配置
 * 实现并配置scrapy图片抓取
 * 封装了google_images_download 现在图片
@@ -18,5 +18,5 @@
 * 其他任务 语言名_任务名_网站名_其他    eg: china_news_people_link
 
 
-##说明
-代码整理
+## 说明
+    代码整理
