@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
-import scrapy
 import time
-from lxml import etree
-from spiderframe.items import ImgsItem
 from urllib.parse import quote
+
+import scrapy
+from lxml import etree
+
+from spiderframe.items import ImgsItem
 
 
 class ImageSpider(scrapy.Spider):
@@ -15,7 +17,8 @@ class ImageSpider(scrapy.Spider):
 
     def start_requests(self):
         for j in range(0, 1200):
-            url = "https://tu.heiguang.com/search/works?wd={category}&page={j}".format(category=quote(self.category),j=j)  # 黑光
+            url = "https://tu.heiguang.com/search/works?wd={category}&page={j}".format(category=quote(self.category),
+                                                                                       j=j)  # 黑光
             time.sleep(3)
             yield scrapy.Request(url=url, callback=self.parse, dont_filter=True)
 

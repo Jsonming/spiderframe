@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
-import scrapy
 import json
+
+import scrapy
+
 from spiderframe.items import SpiderframeItem
 
 

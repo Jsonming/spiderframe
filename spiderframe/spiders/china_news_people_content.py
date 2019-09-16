@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 import scrapy
+
 from spiderframe.items import SpiderframeItem
-from scrapy_redis.spiders import RedisSpider
 
 
 class ChinaNewsPeopleContentSpider(scrapy.Spider):
     name = 'china_news_people_content'
     allowed_domains = ['culture.people.com']
     start_urls = [
-        # 'http://politics.people.com.cn/n1/2019/0701/c1024-31204325.html',
         "http://legal.people.com.cn/GB/223276/203009/427332/427481/index.html"
     ]
 

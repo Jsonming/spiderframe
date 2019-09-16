@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
-import scrapy
 import json
+
+import scrapy
+
 from spiderframe.items import ImgsItem
 
 
@@ -36,4 +38,3 @@ class VietnamShopeeImageSpider(scrapy.Spider):
         item["category"] = self.category
         item["image_urls"] = img_list
         yield item
-

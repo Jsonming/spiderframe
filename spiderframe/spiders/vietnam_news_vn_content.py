@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-import scrapy
-from spiderframe.items import SpiderframeItem
 from scrapy_redis.spiders import RedisSpider
+
+from spiderframe.items import SpiderframeItem
 
 
 class VietnamNewsVnContentSpider(RedisSpider):

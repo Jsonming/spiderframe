@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 import scrapy
+
 from spiderframe.items import ImgsItem
 
 
 class AbmormalCarAccidentSpider(scrapy.Spider):
-    name = 'abmormal_car_accident'
+    name = 'image_ko5'
     allowed_domains = ['www.ko5.com.cn/m/img']
     start_urls = ['http://www.ko5.com.cn/m/img/page/{}'.format(i) for i in range(52, 60)]
 

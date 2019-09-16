@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
-import scrapy
-import demjson
-from spiderframe.items import ImgsItem
 from urllib.parse import quote
+
+import demjson
+import scrapy
+
+from spiderframe.items import ImgsItem
 
 
 class ImageSpider(scrapy.Spider):
@@ -13,8 +15,9 @@ class ImageSpider(scrapy.Spider):
         self.category = category
 
     def start_requests(self):
-        for j in range(0,816,48):
-            url="https://pic.sogou.com/pics?query={category}&st=255&mode=255&start={j}&reqType=ajax&reqFrom=result&tn=0".format(category=quote(self.category),j=j)
+        for j in range(0, 816, 48):
+            url = "https://pic.sogou.com/pics?query={category}&st=255&mode=255&start={j}&reqType=ajax&reqFrom=result&tn=0".format(
+                category=quote(self.category), j=j)
             yield scrapy.Request(url=url, callback=self.parse, dont_filter=True)
 
     def parse(self, response):
@@ -27,11 +30,3 @@ class ImageSpider(scrapy.Spider):
             item["category"] = self.category
             item["image_urls"] = [pic_url]
             yield item
-
-    # def parse(self, response):
-    #     print('response:', response.url)
-    #     item = ImgsItem()
-    #     item["category"] = self.category
-    #     item["image_urls"] = [response.url]
-    #     yield item
-

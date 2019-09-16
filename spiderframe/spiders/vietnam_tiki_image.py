@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-import scrapy
-import re
 import json
-from spiderframe.items import ImgsItem
+import re
+
 from scrapy_redis.spiders import RedisSpider
+
+from spiderframe.items import ImgsItem
 
 
 class VietnamTikiImageSpider(RedisSpider):

@@ -111,4 +111,3 @@ class IndiaHindiLinkSpider(scrapy.Spider):
             yield scrapy.FormRequest(url=url, formdata=form_data, meta={"page": page, "category_id": category_id,
                                                                         "category_creation_id": category_creation_id},
                                      callback=self.parse, dont_filter=True)
-

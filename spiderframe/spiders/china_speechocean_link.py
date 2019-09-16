@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 import scrapy
+
 from spiderframe.items import SpiderframeItem
 
 
 class ChinaSpeechoceanLinkSpider(scrapy.Spider):
     name = 'china_speechocean_link'
     allowed_domains = ['www.speechocean.com']
-    start_urls = ['http://www.speechocean.com/datacenter/recognition/{}.html?prosearch=#datacenter_do'.format(i) for i in range(1, 60)]
+    start_urls = ['http://www.speechocean.com/datacenter/recognition/{}.html?prosearch=#datacenter_do'.format(i) for i
+                  in range(1, 60)]
 
     def parse(self, response):
         products = response.xpath('//div[@class="tit-list"]/div')
@@ -25,4 +27,3 @@ class ChinaSpeechoceanLinkSpider(scrapy.Spider):
             item['item_time_unit'] = product_time_unit
 
             yield item
-

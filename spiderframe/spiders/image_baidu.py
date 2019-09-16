@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
-import re
-import scrapy
 import json
-from spiderframe.items import ImgsItem
+import re
 from urllib.parse import quote
+
+import scrapy
+
+from spiderframe.items import ImgsItem
 
 
 class ImageBaiduSpider(scrapy.Spider):
@@ -18,7 +20,7 @@ class ImageBaiduSpider(scrapy.Spider):
             url = "https://image.baidu.com/search/acjson?tn=resultjson_com&ipn=rj&ct=201326592&is=&fp=result&" \
                   "queryWord={category}&cl=2&lm=-1&ie=utf-8&oe=utf-8&adpicid=&st=&z={z}&ic=&hd=1&latest=0&copyright" \
                   "=0&word={category}&s=&se=&tab=&width=0&height=0&face=&istype=&qc=&nc=&fr=&expermode=&force=&pn={j}" \
-                  "&rn=30&gsm=1a4&1564384419589=".format(category=quote(self.category), j=j, z=9)   # 9 表示特大图
+                  "&rn=30&gsm=1a4&1564384419589=".format(category=quote(self.category), j=j, z=9)  # 9 表示特大图
             yield scrapy.Request(url=url, callback=self.parse, dont_filter=True)
 
     def parse(self, response):

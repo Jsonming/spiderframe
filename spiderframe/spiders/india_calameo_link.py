@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-import scrapy
 import re
+
+import scrapy
 
 
 class IndiaCalameoLinkSpider(scrapy.Spider):
@@ -14,5 +15,3 @@ class IndiaCalameoLinkSpider(scrapy.Spider):
 
         pages = re.findall("Length: (.*?)pages", content, re.I)
         print(img_frist, pages)
-
-

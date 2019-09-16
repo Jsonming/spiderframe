@@ -1,7 +1,8 @@
-import scrapy
-from ..items import ImgsItem
 import requests
+import scrapy
 from lxml import etree
+
+from ..items import ImgsItem
 
 
 class A699picSpider(scrapy.Spider):

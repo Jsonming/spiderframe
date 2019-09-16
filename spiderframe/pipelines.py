@@ -2,7 +2,7 @@
 
 import hashlib
 import os
-
+import sys
 # Define your item pipelines here
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
@@ -18,7 +18,7 @@ from spiderframe.spiders.video_baidu_link import VideoBaiduLinkSpider
 from spiderframe.spiders.vietnam_news_vn_content import VietnamNewsVnContentSpider
 from spiderframe.spiders.vietnam_speaking_sentence import VietnamSpeakingSentenceSpider
 from spiderframe.spiders.china_news_people_content import ChinaNewsPeopleContentSpider
-from spiderframe.spiders.English_speaking_ted_link import EnglishSpeakingTedLinkSpider
+from spiderframe.spiders.english_speaking_ted_link import EnglishSpeakingTedLinkSpider
 from spiderframe.spiders.china_speechocean_link import ChinaSpeechoceanLinkSpider
 
 from . import settings
@@ -162,5 +162,8 @@ class ImagePipeline(ImagesPipeline):
         if not os.path.exists(category_path):
             os.makedirs(category_path)
         image_name = path.replace("full/", "")
-        image_path = os.path.join(category_path, image_name)
+        if sys.platform == "win32":
+            image_path = os.path.join(category_path, image_name)
+        else:
+            image_path = image_name
         return image_path

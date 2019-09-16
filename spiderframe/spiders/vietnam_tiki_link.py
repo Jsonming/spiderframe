@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import scrapy
-import re
+
 from spiderframe.items import SpiderframeItem
 
 
@@ -27,6 +27,6 @@ class VietnamTikiLinkSpider(scrapy.Spider):
 
         if urls:
             next_page = response.meta["page"] + 1
-            # page_url = 'https://tiki.vn/search?q={}&page&ref=searchBar&page={}'.format(self.category, next_page)
-            page_url = 'https://tiki.vn/sach-truyen-tieng-viet/c316?order=top_seller&src=c.316.hamburger_menu_fly_out_banner&page={}'.format(next_page)
+            page_url = 'https://tiki.vn/sach-truyen-tieng-viet/c316?order=top_seller&src=c.316.hamburger_menu_fly_out_banner&page={}'.format(
+                next_page)
             yield scrapy.Request(url=page_url, callback=self.parse, dont_filter=True, meta={"page": next_page})

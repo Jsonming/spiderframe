@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import re
-import scrapy
 from urllib.parse import quote
+
+import scrapy
+
 from spiderframe.items import ImgsItem
 
 
@@ -39,6 +41,6 @@ class ImageGoogleSpider(scrapy.Spider):
         if links:
             current_num = re.findall('&ijn=(.*?)&start=', response.url)[0]
             url = 'https://www.google.com/search?ei=aM0JXfmZBcqD8gXIy7ww&yv=3&q={category}&tbm=isch&vet=10ahUKEwj57YWU7fTiAhXKgbwKHcglDwYQuT0ITCgB.aM0JXfmZBcqD8gXIy7ww.i&ved=0ahUKEwj57YWU7fTiAhXKgbwKHcglDwYQuT0ITCgB&ijn={page}&start={page}00&asearch=ichunk&async=_id:rg_s,_pms:s,_fmt:pc'.format(
-                category=quote(self.category), page=int(current_num)+1)
+                category=quote(self.category), page=int(current_num) + 1)
             yield scrapy.Request(url=url, callback=self.parse, dont_filter=True)
 #

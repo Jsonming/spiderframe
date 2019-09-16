@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-import scrapy
 import datetime
-import json
-from urllib import parse
+
+import scrapy
+
 from ..items import SpiderframeItem
 
 
@@ -10,8 +10,8 @@ class ChinaNewsPeopleSpider(scrapy.Spider):
     name = 'china_news_people_link'
     allowed_domains = ['www.people.com.cn']
     start_urls = [
-        # 'http://news.people.com.cn/',
-        "http://www.people.com.cn/GB/59476/review/{}.html".format((datetime.datetime.today() + datetime.timedelta(days=-i)).strftime("%Y%m%d")) for i in range(0, 6 * 365)
+        "http://www.people.com.cn/GB/59476/review/{}.html".format(
+            (datetime.datetime.today() + datetime.timedelta(days=-i)).strftime("%Y%m%d")) for i in range(0, 6 * 365)
 
     ]
 
