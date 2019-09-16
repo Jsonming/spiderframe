@@ -12,13 +12,11 @@
 * 使用google要翻墙
 * 在spiderframe/spiderframe下启动爬虫，否则会报没有日志文件夹
 
-## 下一步需要做的工作
-* 提高视频下载速度
-* 封装的视频框架调用函数，没有很好的解决参数问题
-* 封装的pytube，可以进行字幕和音频流抓取，需要封装
-* 图片视频抓取后一个粗筛选器
-* 修改没有在spiderframe/spiderframe启动时报没有日志文件夹bug
+## 命名规范
+* 图片抓取爬虫image_网站名   eg: image_360
+* 视频抓取 video_网站名_link存储到redis 再由video_base统一下载下来   eg: video_bilibili_link
+* 其他任务 语言名_任务名_网站名_其他    eg: china_news_people_link
+
 
 ##说明
-spiders文件夹中有四个文件，image_699pic.py video.bilibili.py video.youtube.py vietnam_news_vn_link.py
-这是开发时候测试文件，不想写 test文件夹了，就这样吧，等我认为完美了再整理测试文件
+代码整理
