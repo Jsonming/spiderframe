@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
-import scrapy
-from spiderframe.items import SpiderframeItem
 import demjson
-import sys
-import imp
-imp.reload(sys)
+import scrapy
+
+from spiderframe.items import SpiderframeItem
+
 
 class ImageSpider(scrapy.Spider):
     name = 'video_skypixel_link'
 
     def start_requests(self):
         for i in range(0, 40, 20):
-            url="https://www.skypixel.com/api/v2/works?lang=zh-Hans&platform=web&device=desktop&sort=hot&filter=featured:true&limit=20&offset={}".format(i)
+            url = "https://www.skypixel.com/api/v2/works?lang=zh-Hans&platform=web&device=desktop&sort=hot&" \
+                  "filter=featured:true&limit=20&offset={}".format(i)
             yield scrapy.Request(url=url, callback=self.parse, dont_filter=True)
 
     def parse(self, response):
@@ -20,7 +20,7 @@ class ImageSpider(scrapy.Spider):
         json_contents = json_content["data"]
         for json_list in json_contents["items"]:
             cdn_url = json_list.get("cdn_url")
-            if type(cdn_url)==dict:
+            if type(cdn_url) == dict:
                 large_mp4 = cdn_url.get("large")
                 item = SpiderframeItem()
                 item["url"] = large_mp4

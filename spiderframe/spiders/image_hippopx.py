@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-import json
-import re
 from urllib.parse import quote
-from lxml import etree
+
 import scrapy
+from lxml import etree
+
 from spiderframe.items import ImgsItem
 
 
@@ -27,4 +27,3 @@ class ImageBaiduSpider(scrapy.Spider):
         item["category"] = self.category
         item["image_urls"] = img_urls
         yield item
-
