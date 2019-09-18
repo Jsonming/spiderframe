@@ -10,7 +10,7 @@ from urllib.parse import quote
 class ImageSpider(scrapy.Spider):
     name = 'image_skypixel'
 
-    def __init__(self, category="门", *args, **kwargs):
+    def __init__(self, category="山", *args, **kwargs):
         super(ImageSpider, self).__init__(*args, **kwargs)
         self.category = category
 
@@ -29,5 +29,6 @@ class ImageSpider(scrapy.Spider):
             large_image = [image["large"]]
             large_image.extend([image["medium"]])
             item = ImgsItem()
+            item["category"] = self.category
             item["image_urls"] = large_image
             yield item
