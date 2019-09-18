@@ -15,7 +15,7 @@ class ImageSpider(scrapy.Spider):
         self.category = category
 
     def start_requests(self):
-        for i in range(0, 40, 20):
+        for i in range(0, 20, 20):
             url = "https://www.skypixel.com/api/v2/searches/videos?lang=zh-Hans&platform=web&device=desktop" \
                   "&keyword={category}&limit=20&offset={i}".format(category=quote(self.category), i=i)
             yield scrapy.Request(url=url, callback=self.parse, dont_filter=True)

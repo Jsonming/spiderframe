@@ -156,9 +156,11 @@ class ImagePipeline(ImagesPipeline):
         category_path = os.path.join(image_store, category)
         if not os.path.exists(category_path):
             os.makedirs(category_path)
-        image_name = path.replace("full/", "")
-        if sys.platform == "win32":
+
+        # windows 平台和liunx平台分开
+        if "win" in sys.platform:
+            image_name = path.replace("full/", "")
             image_path = os.path.join(category_path, image_name)
         else:
-            image_path = image_name
+            image_path = path.replace("full/", category + "/")
         return image_path
