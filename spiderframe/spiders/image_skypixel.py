@@ -2,6 +2,7 @@
 import scrapy
 from spiderframe.items import ImgsItem
 import demjson
+from urllib.parse import quote
 import sys
 import imp
 imp.reload(sys)
@@ -9,9 +10,13 @@ imp.reload(sys)
 class ImageSpider(scrapy.Spider):
     name = 'image_skypixel'
 
+    def __init__(self, category="门", *args, **kwargs):
+        super(ImageSpider, self).__init__(*args, **kwargs)
+        self.category = category
+
     def start_requests(self):
         for i in range(0, 20, 20):
-            url="https://www.skypixel.com/api/v2/works?lang=zh-Hans&platform=web&device=desktop&sort=hot&filter=featured:true&limit=20&offset={}".format(i)
+            url="https://www.skypixel.com/api/v2/searches/videos?lang=zh-Hans&platform=web&device=desktop&keyword={category}&limit=20&offset={i}".format(category=quote(self.category), i=i)
             yield scrapy.Request(url=url, callback=self.parse, dont_filter=True)
 
     def parse(self, response):
