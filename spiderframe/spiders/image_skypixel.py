@@ -1,17 +1,22 @@
 # -*- coding: utf-8 -*-
-import scrapy
-from spiderframe.items import ImgsItem
-import demjson
-import sys
 import imp
+import sys
+
+import demjson
+import scrapy
+
+from spiderframe.items import ImgsItem
+
 imp.reload(sys)
+
 
 class ImageSpider(scrapy.Spider):
     name = 'image_skypixel'
 
     def start_requests(self):
         for i in range(0, 20, 20):
-            url="https://www.skypixel.com/api/v2/works?lang=zh-Hans&platform=web&device=desktop&sort=hot&filter=featured:true&limit=20&offset={}".format(i)
+            url = "https://www.skypixel.com/api/v2/works?lang=zh-Hans&platform=web&device=desktop&sort=hot" \
+                  "&filter=featured:true&limit=20&offset={}".format(i)
             yield scrapy.Request(url=url, callback=self.parse, dont_filter=True)
 
     def parse(self, response):
