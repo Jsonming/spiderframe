@@ -22,10 +22,10 @@ def you_get_download(url=None, path=None, rename=False):
     :param path: 存储路径
     :return:
     """
-    if not path:
-        path = '/data/video/video'
+    if "win" not in sys.platform:
+        path = '/data/video'
     else:
-        path = './files/video/{}'.format(path)
+        path = './files/video'
     if not os.path.exists(path):
         os.makedirs(path)
 

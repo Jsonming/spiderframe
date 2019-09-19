@@ -18,5 +18,17 @@
 * 其他任务 语言名_任务名_网站名_其他    eg: china_news_people_link
 
 
-## 说明
-    代码整理
+## 文件夹说明
+* common 公共文件夹，用于存放需要的公共函数
+* file  用于存放抓取到的文件，本地主要用于调试，服务器用于大规模抓取，主要是图片，视频文件服务器还有 /data/video/video 文件夹
+* script 用于爬取需要的脚本文件，其他框架抓取的集成
+* spider 爬虫文件
+* download.py 不使用scrapy 的下载, 方便在spider中调用
+* items.py item 文件
+* main.py 爬虫启动主文件
+* middlewares.py 中间件
+* pipelines.py 管道文件
+* settings.py 爬虫设置文件
+* .gitignore   git忽略文件
+* requirment.txt  依赖文件
+* scrapy.cfg 配置文件
