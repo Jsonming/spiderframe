@@ -6,7 +6,7 @@ from spiderframe.download import you_get_download
 
 class VideoBaseSpider(RedisSpider):
     name = 'video_base'
-    redis_key = 'video_bilibili_link'
+    redis_key = 'video_skypixel_link'
 
     custom_settings = {
         'REDIS_HOST': '123.56.11.156',
@@ -18,4 +18,4 @@ class VideoBaseSpider(RedisSpider):
     }
 
     def parse(self, response):
-        you_get_download(response.url)
+        you_get_download(response.url, rename=True)

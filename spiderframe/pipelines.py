@@ -97,6 +97,7 @@ class MySQLPipeline(object):
 class RedisPipeline(object):
     def __init__(self):
         self.db_conn = None
+        self.fingerprint_key = 'fingerprint_temp'
 
     def open_spider(self, spider):
         db_host = spider.settings.get('REDIS_HOST', 'localhost')
@@ -123,8 +124,8 @@ class RedisPipeline(object):
 
     def check_url_crawled(self, url):
         fingerprint = self.generate_fingerprint(url)
-        if not self.fingerprint_exist('fingerprint', fingerprint):
-            self.insert_fingerprint('fingerprint', fingerprint)
+        if not self.fingerprint_exist(self.fingerprint_key, fingerprint):
+            self.insert_fingerprint(self.fingerprint_key, fingerprint)
             return False
         else:
             print("指纹重复")
@@ -159,7 +160,7 @@ class ImagePipeline(ImagesPipeline):
 
         # windows 平台和liunx平台分开
         if "win" in sys.platform:
-            image_name = path.replace("full/", "")
+            image_name = path.replace("full/", '')
             image_path = os.path.join(category_path, image_name)
         else:
             image_path = path.replace("full/", category + "/")

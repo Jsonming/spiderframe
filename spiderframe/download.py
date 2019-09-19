@@ -12,9 +12,10 @@ import you_get
 from pytube import YouTube
 
 from . import settings
+from spiderframe.common.common import md5
 
 
-def you_get_download(url=None, path=None):
+def you_get_download(url=None, path=None, rename=False):
     """
         调用you-get 抓取视频
     :param url: 视频url
@@ -28,7 +29,13 @@ def you_get_download(url=None, path=None):
     if not os.path.exists(path):
         os.makedirs(path)
 
-    sys.argv = ['you-get', '-o', path, url]
+    assert isinstance(rename, bool)  # 由于python 语言的特性，无法限制参数的类型，如果要限制类型需在代码中判断
+
+    if rename:
+        name = md5(url)
+        sys.argv = ['you_get', '-o', path, '-O', name, url]
+    else:
+        sys.argv = ['you_get', '-o', path, url]
     you_get.main()
 
 
