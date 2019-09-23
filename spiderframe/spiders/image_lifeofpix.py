@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
+from urllib.parse import quote
+
 import scrapy
 from lxml import etree
+
 from spiderframe.items import ImgsItem
-import demjson
-from urllib.parse import quote
 
 
 class ImageSpider(scrapy.Spider):
@@ -31,8 +32,6 @@ class ImageSpider(scrapy.Spider):
         html = etree.HTML(resp)
         img_urls = html.xpath('//img[@id="pic"]/@src')
         item = ImgsItem()
-        item["category"] =  self.category
+        item["category"] = self.category
         item["image_urls"] = img_urls
         yield item
-
-
