@@ -27,7 +27,7 @@ class ImageSpider(scrapy.Spider):
             yield scrapy.Request(next_url, callback=self.parse_url)
         category_url = response.url
         urls = re.split("/", category_url)
-        category=urls[-2]
+        category=urls[3]
         img_urls = response.xpath('//a[@class="screen-link"]/@href').extract()
         for img_url in img_urls:
             yield scrapy.Request(url=img_url, callback=self.parse_content, dont_filter=True,meta={'category': category})
