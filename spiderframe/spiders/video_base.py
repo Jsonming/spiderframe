@@ -18,4 +18,4 @@ class VideoBaseSpider(RedisSpider):
     }
 
     def parse(self, response):
-        you_get_download(response.url, rename=True)
+        you_get_download(response.url)

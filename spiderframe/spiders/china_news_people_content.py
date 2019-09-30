@@ -8,7 +8,7 @@ class ChinaNewsPeopleContentSpider(scrapy.Spider):
     name = 'china_news_people_content'
     allowed_domains = ['culture.people.com']
     start_urls = [
-        "http://legal.people.com.cn/GB/223276/203009/427332/427481/index.html"
+        "http://politics.people.com.cn/n1/2019/0924/c1001-31368712.html"
     ]
 
     # redis_key = 'china_news_people_content'
@@ -35,7 +35,7 @@ class ChinaNewsPeopleContentSpider(scrapy.Spider):
         content.extend(response.xpath('//div[@class="p4_1"]//p/text()').extract())
         content.extend(response.xpath('//ul[@id="content"]//text()').extract())
 
-        text = ''.join(content).replace('\r', '').replace('\n', '').replace('\t', '')
+        text = ''.join(content).replace('\r', '').replace('\n', '').replace('\t', '').strip()
         if "v.people.cn" not in response.url:
             item = SpiderframeItem()
             item["url"] = response.url
