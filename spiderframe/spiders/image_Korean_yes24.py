@@ -6,7 +6,6 @@ from spiderframe.items import ImgsItem
 
 class ImageSpider(scrapy.Spider):
     name = 'image_yes24'
-    # start_urls = ["http://cn.yes24.com"]
 
     def __init__(self, *args, **kwargs):
         super(ImageSpider, self).__init__(*args, **kwargs)
@@ -48,37 +47,37 @@ class ImageSpider(scrapy.Spider):
 
         yield scrapy.Request(url=url, headers=headers,callback=self.parse, dont_filter=True)
 
-
-    # def parse(self, response):
-    #     # urls = response.xpath('//dd[@class="qCatePos01"]//a/@href').extract()"/html/body/div/div[1]/div[1]/ul/li[6]/a
-    #     urls = response.xpath('/html/body/div/div[1]/div[1]/ul/li[6]/a/@href').extract()
-    #     for url in urls:
-    #         yield scrapy.Request(url=url, callback=self.parse_url, dont_filter=True)
-
     def parse(self, response):
         img_urls = response.xpath('//dd[@class="qCatePos01"]//a/@href').extract()
         for img_url in img_urls:
-            img_url = "http://www.yes24.com/" + img_url
-            # yield scrapy.Request(url=img_url, callback=self.parse_img, dont_filter=True)
-            print(img_url)
+            yield scrapy.Request(url=img_url, callback=self.parse_url, dont_filter=True)
 
-    # def parse_url(self, response):
-    #     img_urls = response.xpath('//div[@class="cateSubListArea clearfix"]/dl/dt/a/@href').extract()
-    #     for img_url in img_urls:
-    #         img_url="http://www.yes24.com/"+img_url
-    #         yield scrapy.Request(url=img_url, callback=self.parse_img, dont_filter=True)
-    #
-    # def parse_img(self, response):
-    #     img_urls = response.xpath('//span[@class="imgBdr"]/a/@href').extract()
-    #     for img_url in img_urls:
-    #         img_url="http://www.yes24.com/"+img_url
-    #         # yield scrapy.Request(url=img_url, callback=self.parse_content, dont_filter=True)
-    #         print(img_url)
+    def parse_url(self, response):
+        img_urls = response.xpath('//div[@class="cateSubListArea clearfix"]/dl/dt/a/@href').extract()
+        for img_url in img_urls:
+            img_url="http://www.yes24.com/"+img_url
+            yield scrapy.Request(url=img_url, callback=self.parse_img, dont_filter=True)
 
-    # def parse_content(self, response):
-    #     img_urls = response.xpath('//dd//img/@src').extract()
-    #     category = response.xpath('//option[@selected=""]//text()').extract()
-    #     item = ImgsItem()
-    #     item["image_urls"] = img_urls
-    #     item["category"] = category
-    #     yield item
+    def parse_img(self, response):
+        category_url = response.url
+        urls = re.split("/", category_url)
+        category = urls[-1]
+        next_urls = response.xpath('//a[@class="bgYUI next"]/a/@href').extract()
+        for next_url in next_urls:
+            yield scrapy.Request(next_url, callback=self.parse_img)
+        img_urls = response.xpath('//span[@class="imgBdr"]/a/@href').extract()
+        # category = response.xpath('//h3[@class="cateTit_txt"]//text()').extract()
+        for img_url in img_urls:
+            img_url="http://www.yes24.com/"+img_url
+            yield scrapy.Request(url=img_url, callback=self.parse_content, dont_filter=True,meta={'category': category})
+
+
+    def parse_content(self, response):
+        category = response.meta['category']
+        img_urls = response.xpath('//em[@class="imgBdr"]//img/@src').extract()
+        # print(img_urls)
+        item = ImgsItem()
+        # if "http://image.yes" in img_urls:
+        item["image_urls"] = img_urls
+        item["category"] = category
+        yield item
