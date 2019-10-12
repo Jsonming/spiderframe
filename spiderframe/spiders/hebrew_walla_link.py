@@ -8,8 +8,8 @@ class HebrewWallaLinkSpider(scrapy.Spider):
     name = 'hebrew_walla_link'
     allowed_domains = ['www.walla.co.il']
     start_urls = [
-        'https://news.walla.co.il/category/18',
-        # 'https://news.walla.co.il/archive/18?month=11&year=2018'
+        # 'https://news.walla.co.il/category/{}'.format(i) for i in range(1, 100)
+        'https://news.walla.co.il/archive/{}?month={}&year={}'.format(i, m, y) for i in range(1, 10) for m in range(1,13) for y in range(2006, 2020)
     ]
 
     def parse(self, response):
