@@ -20,6 +20,7 @@ from spiderframe.spiders.vietnam_speaking_sentence import VietnamSpeakingSentenc
 from spiderframe.spiders.china_news_people_content import ChinaNewsPeopleContentSpider
 from spiderframe.spiders.english_speaking_ted_link import EnglishSpeakingTedLinkSpider
 from spiderframe.spiders.china_speechocean_link import ChinaSpeechoceanLinkSpider
+from spiderframe.spiders.hebrew_walla_content import HebrewWallaContentSpider
 
 from . import settings
 
@@ -75,20 +76,15 @@ class MySQLPipeline(object):
                 sql = 'INSERT INTO Img(img_name, url) VALUES(%s,%s)'
                 self.db_cur.execute(sql, (thumb_guid, url))
 
-        if spider.name.endswith("content"):
-            if item["content"]:
-                self.insert_db(spider.name, item)
-        elif isinstance(spider, ChinaSpeechoceanLinkSpider):
+        if isinstance(spider, HebrewWallaContentSpider):
             values = (
-                item['item_id'],
-                item['item_name'],
-                item['item_time_long'],
-                item['item_time_unit'],
                 item['url'],
+                item['category'],
+                item['title'],
+                item['content'],
             )
-
-            sql = 'INSERT INTO {db_name}(product_id,product_name,product_time_long,product_time_unit,' \
-                  ' product_url) VALUES(%s,%s,%s,%s,%s)'.format(db_name=spider.name)  # 将表名设置为参数形式
+            sql = 'INSERT INTO {db_name}(url,category,title,content) VALUES(%s,%s,%s,%s)'.format(
+                db_name=spider.name)  # 将表名设置为参数形式
             self.db_cur.execute(sql, values)
             self.db_conn.commit()
         return item
