@@ -21,7 +21,7 @@ class HebrewWallaContentSpider(RedisSpider):
     }
 
     def parse(self, response):
-        title = response.xpath('//h1[@class="title"]/text()').extract()
+        title = response.xpath('//h1[contains(@class, "title")]/text()').extract()
         # subtitle = response.xpath('//p[@class="subtitle"]/text()').extract()
         content = response.xpath('//section/p/text()').extract()
 
