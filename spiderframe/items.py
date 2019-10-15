@@ -14,6 +14,8 @@ class SpiderframeItem(scrapy.Item):
 
     ori_url = scrapy.Field()
     url = scrapy.Field()
+    category = scrapy.Field()
+    title = scrapy.Field()
     content = scrapy.Field()
 
     item_id = scrapy.Field()
@@ -27,5 +29,5 @@ class ImgsItem(scrapy.Item):
     # name = scrapy.Field()
 
     category = scrapy.Field()
-    image_urls = scrapy.Field()     # 这个图片的URL 类型:list
-    images = scrapy.Field()         # 这个看源码是结果字段，也不知道要它干啥， 有个屌用！
+    image_urls = scrapy.Field()  # 这个图片的URL 类型:list
+    images = scrapy.Field()  # 这个看源码是结果字段，也不知道要它干啥， 有个屌用！
