@@ -24,7 +24,7 @@ class ImageSpider(scrapy.Spider):
             yield scrapy.Request(url=img_url, callback=self.parse_img, dont_filter=True)
 
     def parse_img(self, response):
-        category = response.xpath('//h2//text()').extract()
+        category = response.xpath('//li[@id="lPathCat2"]//text()').extract()
         next_urls = response.xpath('//a[@class="bgYUI next"]/a/@href').extract()
         for next_url in next_urls:
             yield scrapy.Request(next_url, callback=self.parse_img)
@@ -39,5 +39,10 @@ class ImageSpider(scrapy.Spider):
         img_urls = response.xpath('//img[@class="mainThumb"]/@src').extract()
         item = ImgsItem()
         item["image_urls"] = img_urls
-        item["category"] = category[0]
+        category = category[0]
+        if "/" in category:
+            category=re.sub("/","",category)
+            item["category"] = category
+        else:
+            item["category"] = category
         yield item

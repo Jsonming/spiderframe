@@ -30,11 +30,12 @@ class ImageSpider(scrapy.Spider):
     def parse_content(self, response):
         img_urls = response.xpath('//div[@class="prd_img"]/img/@src').extract()
         img_url = re.sub("\?l=ko","", img_urls[0])
-        category = response.xpath('(//a[@class="cate_y"])[last()]/text()').extract()
+        category = response.xpath('(//a[@class="cate_y"])[1]/text()').extract()
         item = ImgsItem()
         item["image_urls"] = [img_url]
-        if category:
-            item["category"] = category[0]
+        if "/" in category:
+            category = re.sub("/", "", category)
+            item["category"] = category[0] + "image_oliveyoung"
         else:
-            item["category"] = "other"
+            item["category"] = category[0] + "image_oliveyoung"
         yield item

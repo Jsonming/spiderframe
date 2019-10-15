@@ -33,5 +33,10 @@ class ImageSpider(scrapy.Spider):
         img_urls = response.xpath('//img[@class="BigImage "]/@src').extract()
         item = ImgsItem()
         item["image_urls"] = ["http:"+img_urls[0]]
-        item["category"] = category[0]
+        category = category[0]
+        if "/" in category:
+            category=re.sub("/","",category)
+            item["category"] = category+"image_newts"
+        else:
+            item["category"] = category+"image_newts"
         yield item
