@@ -35,3 +35,4 @@ class ImageSpider(scrapy.Spider):
         item["image_urls"] = img_urls
         item["category"] = "textbookmall"
         yield item
+
