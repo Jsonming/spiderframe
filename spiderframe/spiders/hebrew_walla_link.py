@@ -4,24 +4,24 @@ from scrapy_redis.spiders import RedisSpider
 from spiderframe.items import SpiderframeItem
 
 
-class HebrewWallaLinkSpider(RedisSpider):
+class HebrewWallaLinkSpider(scrapy.Spider):
     name = 'hebrew_walla_link'
     allowed_domains = ['www.walla.co.il']
 
-    redis_key = 'hebrew_walla_new_link'
-    custom_settings = {
-        'REDIS_HOST': '123.56.11.156',
-        'REDIS_PORT': 6379,
-        'REDIS_PARAMS': {
-            'password': '',
-            'db': 0
-        },
-    }
+    # redis_key = 'hebrew_walla_new_link'
+    # custom_settings = {
+    #     'REDIS_HOST': '123.56.11.156',
+    #     'REDIS_PORT': 6379,
+    #     'REDIS_PARAMS': {
+    #         'password': '',
+    #         'db': 0
+    #     },
+    # }
 
-    # def start_requests(self):
-    #     for i in range(500, 1000):
-    #         url = 'https://news.walla.co.il/category/{}'.format(i)
-    #         yield scrapy.Request(url=url, callback=self.parse, meta={'c_id': i})
+    def start_requests(self):
+        for i in range(500, 1000):
+            url = 'https://news.walla.co.il/category/{}'.format(i)
+            yield scrapy.Request(url=url, callback=self.parse, meta={'c_id': i})
 
     def parse(self, response):
         links = response.xpath("//section[(contains(@class, 'sequence'))]//a/@href").extract()

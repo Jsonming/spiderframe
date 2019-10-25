@@ -20,8 +20,9 @@ class TranslateGoogleSpider(scrapy.Spider):
                 keyword = key_word.strip()
                 pj = Py4Js()
                 tk = pj.get_tk(keyword)
-                url = "https://translate.google.cn/translate_a/single?client=webapp&sl=en&tl=zh-CN&hl=zh-CN&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&ssel=3&tsel=3&kc=0&tk={tk}&q={keyword}".format(
-                    **locals())
+                url = "https://translate.google.cn/translate_a/single?client=webapp&sl=en&tl=zh-CN&hl=zh-CN&dt=at&" \
+                      "dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&ssel=3&tsel=3&kc=0" \
+                      "&tk={tk}&q={keyword}".format(**locals())
                 yield scrapy.Request(url=url, callback=self.parse, meta={'keyword': keyword}, dont_filter=True)
 
     def parse(self, response):

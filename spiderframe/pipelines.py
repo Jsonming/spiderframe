@@ -22,6 +22,7 @@ from spiderframe.spiders.english_speaking_ted_link import EnglishSpeakingTedLink
 from spiderframe.spiders.china_speechocean_link import ChinaSpeechoceanLinkSpider
 from spiderframe.spiders.hebrew_walla_content import HebrewWallaContentSpider
 from spiderframe.spiders.translate_google import TranslateGoogleSpider
+from spiderframe.spiders.translate_baidu import TranslateBaiduSpider
 
 from . import settings
 
@@ -77,7 +78,7 @@ class MySQLPipeline(object):
                 sql = 'INSERT INTO Img(img_name, url) VALUES(%s,%s)'
                 self.db_cur.execute(sql, (thumb_guid, url))
 
-        if isinstance(spider, TranslateGoogleSpider):
+        if isinstance(spider, TranslateBaiduSpider):
             values = (
                 item['category'],
                 item['title'],
