@@ -19,7 +19,7 @@ class HebrewWallaLinkSpider(scrapy.Spider):
     # }
 
     def start_requests(self):
-        for i in range(500, 1000):
+        for i in range(1000, 10000):
             url = 'https://news.walla.co.il/category/{}'.format(i)
             yield scrapy.Request(url=url, callback=self.parse, meta={'c_id': i})
 
