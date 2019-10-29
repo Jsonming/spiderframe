@@ -7,7 +7,6 @@ from spiderframe.items import ImgsItem
 class ImageSpider(scrapy.Spider):
     name = 'image_kagome'
 
-
     def __init__(self, *args, **kwargs):
         super(ImageSpider, self).__init__(*args, **kwargs)
 
