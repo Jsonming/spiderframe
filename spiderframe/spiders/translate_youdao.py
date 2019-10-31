@@ -10,7 +10,7 @@ class TranslateYoudaoSpider(scrapy.Spider):
     allowed_domains = ['dict.youdao.com']
 
     def start_requests(self):
-        with open(r'D:\datatang\spiderframe\spiderframe\files\new.txt', 'r', encoding='utf8')as f:
+        with open(r'D:\datatang\spiderframe\spiderframe\files\youdaofanyi.txt', 'r', encoding='utf8')as f:
             for key_word in f:
                 keyword = key_word.strip()
                 start_url = 'http://dict.youdao.com/w/{}/'.format(keyword)

@@ -17,32 +17,31 @@ class TranslateBaiduSpider(scrapy.Spider):
 
     def start_requests(self):
         url = 'http://fanyi.baidu.com/translate/'
-        yield scrapy.Request(url=url, callback=self.parse, dont_filter=True)
+        with open(r'D:\datatang\spiderframe\spiderframe\files\简单句单词总.txt', 'r', encoding='utf8')as f:
+            for key_word in f:
+                keyword = key_word.strip()
+                yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
 
     def parse(self, response):
         windows_gtk = re.findall(";window.gtk = (.*?);</script>", response.text)[0][1:-1]
         token = re.findall(r"token: '(.*?)',", response.text)[0]
+        query = response.meta.get("query")
 
-        with open(r'D:\datatang\spiderframe\spiderframe\files\baidufanyi.txt', 'r', encoding='utf8')as f:
-            for key_word in f:
-                keyword = key_word.strip()
-                query = keyword
+        node = BaiDuTranslateJS()
+        sign = node.get_sign(query, windows_gtk)
 
-                node = BaiDuTranslateJS()
-                sign = node.get_sign(query, windows_gtk)
-
-                url = "https://fanyi.baidu.com/v2transapi"
-                data = {
-                    'from': 'en',
-                    'to': "zh",
-                    "query": query,
-                    "transtype": 'translang',
-                    "simple_meas_flag": '3',
-                    "sign": sign,
-                    'token': token
-                }
-                yield scrapy.FormRequest(url=url, formdata=data, callback=self.parse_item, dont_filter=True,
-                                         meta={"keyword": query})
+        url = "https://fanyi.baidu.com/v2transapi"
+        data = {
+            'from': 'en',
+            'to': "zh",
+            "query": query,
+            "transtype": 'translang',
+            "simple_meas_flag": '3',
+            "sign": sign,
+            'token': token
+        }
+        yield scrapy.FormRequest(url=url, formdata=data, callback=self.parse_item, dont_filter=True,
+                                 meta={"keyword": query})
 
     def parse_item(self, response):
         json_data = json.loads(response.text)
