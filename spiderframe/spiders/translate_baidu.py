@@ -17,20 +17,24 @@ class TranslateBaiduSpider(scrapy.Spider):
 
     def start_requests(self):
         url = 'http://fanyi.baidu.com/translate/'
-        with open(r'D:\datatang\spiderframe\spiderframe\files\简单句单词总.txt', 'r', encoding='utf8')as f:
-            for key_word in f:
-                keyword = key_word.strip()
-                yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
+        # with open(r'D:\datatang\spiderframe\spiderframe\files\简单句单词总.txt', 'r', encoding='utf8')as f:
+        #     for key_word in f:
+        #         keyword = key_word.strip()
+        keyword = "know"
+        yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
 
     def parse(self, response):
-        windows_gtk = re.findall(";window.gtk = (.*?);</script>", response.text)[0][1:-1]
-        token = re.findall(r"token: '(.*?)',", response.text)[0]
+        # windows_gtk = re.findall(";window.gtk = (.*?);</script>", response.text)[0][1:-1]
+        # token = re.findall(r"token: '(.*?)',", response.text)[0]
+
+        windows_gtk = '320305.131321201'
+        token = "801c121315094c2f0451845bea9ce2fe"
         query = response.meta.get("query")
 
         node = BaiDuTranslateJS()
         sign = node.get_sign(query, windows_gtk)
 
-        url = "https://fanyi.baidu.com/v2transapi"
+        url = "https://fanyi.baidu.com/v2transapi?from=en&to=zh"
         data = {
             'from': 'en',
             'to': "zh",
@@ -40,10 +44,21 @@ class TranslateBaiduSpider(scrapy.Spider):
             "sign": sign,
             'token': token
         }
-        yield scrapy.FormRequest(url=url, formdata=data, callback=self.parse_item, dont_filter=True,
+        header = {
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "cache-control": "no-cache",
+            "cookie": "BAIDUID=02725590C792FF940E803CB07B053FEA:"
+                      "FG=1; BIDUPSID=02725590C792FF940E803CB07B053FEA; "
+                      "PSTM=1557990196; "
+                      "to_lang_often=%5B%7B%22value%22%3A%22en%22%2C%22text%22%3A%22%u82F1%u8BED%22%7D%2C%7B%22value%22%3A%22zh%22%2C%22text%22%3A%22%u4E2D%u6587%22%7D%5D; "
+                      "REALTIME_TRANS_SWITCH=1; FANYI_WORD_SWITCH=1; SOUND_SPD_SWITCH=1; HISTORY_SWITCH=1; SOUND_PREFER_SWITCH=1; from_lang_often=%5B%7B%22value%22%3A%22zh%22%2C%22text%22%3A%22%u4E2D%u6587%22%7D%2C%7B%22value%22%3A%22en%22%2C%22text%22%3A%22%u82F1%u8BED%22%7D%5D; H_PS_PSSID=1445_21097_29921_29568_29220_26350; delPer=0; PSINO=2; BDORZ=B490B5EBF6F3CD402E515D22BCDA1598; Hm_lvt_64ecd82404c51e03dc91cb9e8c025574=1572508074,1572512679,1572512867,1572515669; yjs_js_security_passport=75fbfb6eb5e8b93053fdda8c6f15e8160a536f70_1572515753_js; Hm_lpvt_64ecd82404c51e03dc91cb9e8c025574=1572516236; __yjsv5_shitong=1.0_7_5c003f5356b4428943d8f74bb6c658efd893_300_1572516236513_123.58.106.254_79b85b3f"
+        }
+        yield scrapy.FormRequest(url=url, formdata=data, callback=self.parse_item, dont_filter=True, headers=header,
                                  meta={"keyword": query})
 
     def parse_item(self, response):
+        print(response.text)
+
         json_data = json.loads(response.text)
         dr = re.compile(r'<[^>]+>', re.S)
 
