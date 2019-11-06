@@ -25,6 +25,7 @@ from spiderframe.spiders.translate_google import TranslateGoogleSpider
 from spiderframe.spiders.translate_baidu import TranslateBaiduSpider
 from spiderframe.spiders.translate_youdao import TranslateYoudaoSpider
 from spiderframe.spiders.English_corpus_gutenberg import EnglishCorpusGutenbergSpider
+from spiderframe.spiders.translate_bing import TranslateBingSpider
 from . import settings
 
 
@@ -90,8 +91,17 @@ class MySQLPipeline(object):
                 db_name="translate_sentence")  # 将表名设置为参数形式
             self.db_cur.execute(sql, values)
             self.db_conn.commit()
-        elif isinstance(spider, EnglishCorpusGutenbergSpider):
-            self.insert_db("English_corpus_gutenberg", item)
+        elif isinstance(spider, TranslateBingSpider):
+            values = (
+                item['category'],
+                item['title'],
+                item['item_id'],
+                item['content'],
+            )
+            sql = 'INSERT INTO {db_name}(source,word,md,sentence) VALUES(%s,%s,%s,%s)'.format(
+                db_name="translate_sentence_new")  # 将表名设置为参数形式
+            self.db_cur.execute(sql, values)
+            self.db_conn.commit()
         return item
 
 
@@ -123,10 +133,13 @@ class RedisPipeline(object):
         md5.update(string.encode('utf-8'))
         return md5.hexdigest()
 
-    def check_url_crawled(self, url):
-        fingerprint = self.generate_fingerprint(url)
-        if not self.fingerprint_exist(self.fingerprint_key, fingerprint):
-            self.insert_fingerprint(self.fingerprint_key, fingerprint)
+    def check_url_crawled(self, content, fingerprint_key=None):
+        if not fingerprint_key:
+            fingerprint_key = self.fingerprint_key
+
+        fingerprint = self.generate_fingerprint(content)
+        if not self.fingerprint_exist(fingerprint_key, fingerprint):
+            self.insert_fingerprint(fingerprint_key, fingerprint)
             return False
         else:
             print("指纹重复")
@@ -139,7 +152,9 @@ class RedisPipeline(object):
         elif spider.name.endswith("content"):
             if not item['content']:
                 self.insert_db(spider.name, item['url'])
-        return item
+        elif isinstance(spider, TranslateBingSpider):
+            if not self.check_url_crawled(content=item.get("content"), fingerprint_key="fingerprint"):
+                return item
 
 
 class ImagePipeline(ImagesPipeline):

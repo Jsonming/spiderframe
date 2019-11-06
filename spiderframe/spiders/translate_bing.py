@@ -9,7 +9,7 @@ class TranslateBingSpider(scrapy.Spider):
     allowed_domains = ['cn.bing.com/']
 
     def start_requests(self):
-        with open(r'E:\code\spiderframe\spiderframe\files\简单句单词总.txt', 'r', encoding='utf8')as f:
+        with open(r'D:\datatang\spiderframe\spiderframe\files\简单句单词总.txt', 'r', encoding='utf8')as f:
             for key_word in f:
                 keyword = key_word.strip()
                 for offset in range(10, 50, 10):

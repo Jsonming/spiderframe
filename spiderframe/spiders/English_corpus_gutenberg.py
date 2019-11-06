@@ -7,12 +7,12 @@ from ..items import SpiderframeItem
 class EnglishCorpusGutenbergSpider(scrapy.Spider):
     name = 'English_corpus_gutenberg'
     allowed_domains = ['www.gutenberg.org']
-    start_urls = ['http://www.gutenberg.org/ebooks/search/%3Fsort_order%3Ddownloads']
+    # start_urls = ['http://www.gutenberg.org/ebooks/search/%3Fsort_order%3Ddownloads']
 
-    # def start_requests(self):
-    #     for i in range(26, 60525, 25):
-    #         url = "http://www.gutenberg.org/ebooks/search/?sort_order=downloads&start_index={}".format(i)
-    #         yield scrapy.Request(url=url, callback=self.parse, dont_filter=True)
+    def start_requests(self):
+        for i in range(26, 1000, 25):
+            url = "http://www.gutenberg.org/ebooks/search/?sort_order=downloads&start_index={}".format(i)
+            yield scrapy.Request(url=url, callback=self.parse, dont_filter=True)
 
     def parse(self, response):
         book_links = response.xpath('//li[@class="booklink"]//a/@href').extract()
