@@ -10,7 +10,7 @@ class EnglishCorpusGutenbergSpider(scrapy.Spider):
     # start_urls = ['http://www.gutenberg.org/ebooks/search/%3Fsort_order%3Ddownloads']
 
     def start_requests(self):
-        for i in range(26, 1000, 25):
+        for i in range(1000, 1100, 25):
             url = "http://www.gutenberg.org/ebooks/search/?sort_order=downloads&start_index={}".format(i)
             yield scrapy.Request(url=url, callback=self.parse, dont_filter=True)
 

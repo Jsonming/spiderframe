@@ -25,6 +25,7 @@ from spiderframe.spiders.translate_google import TranslateGoogleSpider
 from spiderframe.spiders.translate_baidu import TranslateBaiduSpider
 from spiderframe.spiders.translate_youdao import TranslateYoudaoSpider
 from spiderframe.spiders.English_corpus_gutenberg import EnglishCorpusGutenbergSpider
+from spiderframe.spiders.English_corpus_gutenberg_new import EnglishCorpusGutenbergNewSpider
 from spiderframe.spiders.translate_bing import TranslateBingSpider
 from . import settings
 
@@ -102,6 +103,9 @@ class MySQLPipeline(object):
                 db_name="translate_sentence_new")  # 将表名设置为参数形式
             self.db_cur.execute(sql, values)
             self.db_conn.commit()
+        elif isinstance(spider, EnglishCorpusGutenbergNewSpider):
+            self.insert_db("English_corpus_gutenberg", item)
+
         return item
 
 
@@ -153,8 +157,10 @@ class RedisPipeline(object):
             if not item['content']:
                 self.insert_db(spider.name, item['url'])
         elif isinstance(spider, TranslateBingSpider):
-            if not self.check_url_crawled(content=item.get("content"), fingerprint_key="fingerprint"):
-                return item
+            if self.check_url_crawled(content=item.get("content"), fingerprint_key="fingerprint"):
+                item = None
+
+        return item
 
 
 class ImagePipeline(ImagesPipeline):
