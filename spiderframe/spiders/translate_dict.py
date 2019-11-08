@@ -4,7 +4,7 @@ from spiderframe.common.common import md5
 from spiderframe.items import SpiderframeItem
 
 
-class TranslateBingSpider(scrapy.Spider):
+class TranslateDictSpider(scrapy.Spider):
     name = 'translate_dict'
     allowed_domains = ['dict.cn']
 

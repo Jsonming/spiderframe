@@ -9,7 +9,7 @@ from spiderframe.common.common import md5
 from spiderframe.items import SpiderframeItem
 
 
-class TranslateGoogleSpider(scrapy.Spider):
+class TranslateQQSpider(scrapy.Spider):
     name = 'translate_qq'
     allowed_domains = ['fanyi.qq.com/']
     start_urls = ['https://fanyi.qq.com/']
