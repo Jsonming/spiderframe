@@ -20,7 +20,7 @@ class TranslateBaiduSpider(scrapy.Spider):
         # with open(r'D:\datatang\spiderframe\spiderframe\files\简单句单词总.txt', 'r', encoding='utf8')as f:
         #     for key_word in f:
         #         keyword = key_word.strip()
-        keyword = "know"
+        keyword = "new"
         yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
 
     def parse(self, response):
