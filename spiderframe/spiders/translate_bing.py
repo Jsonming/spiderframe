@@ -9,10 +9,10 @@ class TranslateBingSpider(scrapy.Spider):
     allowed_domains = ['cn.bing.com/']
 
     def start_requests(self):
-        with open(r'D:\datatang\spiderframe\spiderframe\files\简单句单词总.txt', 'r', encoding='utf8')as f:
+        with open(r'E:\code\spiderframe\spiderframe\files\简单句单词总.txt', 'r', encoding='utf8')as f:
             for key_word in f:
                 keyword = key_word.strip()
-                for offset in range(10, 50, 10):
+                for offset in range(10, 500, 10):
                     url = "https://cn.bing.com/dict/service?q={keyword}&offset={offset}&dtype=sen&&qs=n&form=Z9LH5&sp=-1&pq={keyword}".format(
                         keyword=keyword, offset=offset)
                     yield scrapy.Request(url=url, callback=self.parse, meta={'keyword': keyword}, dont_filter=True)

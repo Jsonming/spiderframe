@@ -12,6 +12,7 @@ import redis
 from scrapy.pipelines.images import ImagesPipeline
 
 from spiderframe.items import ImgsItem
+from spiderframe.items import SpiderframeItem
 from spiderframe.spiders.vietnam_news_vn_link import VietnamNewsVnLinkSpider
 from spiderframe.spiders.video_bilibili_link import VideoBilibiliLinkSpider
 from spiderframe.spiders.video_baidu_link import VideoBaiduLinkSpider
@@ -26,7 +27,10 @@ from spiderframe.spiders.translate_baidu import TranslateBaiduSpider
 from spiderframe.spiders.translate_youdao import TranslateYoudaoSpider
 from spiderframe.spiders.English_corpus_gutenberg import EnglishCorpusGutenbergSpider
 from spiderframe.spiders.English_corpus_gutenberg_new import EnglishCorpusGutenbergNewSpider
+from spiderframe.spiders.translate_dict import TranslateDictSpider
 from spiderframe.spiders.translate_bing import TranslateBingSpider
+from spiderframe.spiders.translate_cnki import TranslateCnkiSpider
+
 from . import settings
 
 
@@ -81,6 +85,18 @@ class MySQLPipeline(object):
                 sql = 'INSERT INTO Img(img_name, url) VALUES(%s,%s)'
                 self.db_cur.execute(sql, (thumb_guid, url))
 
+        if isinstance(item, SpiderframeItem):
+            values = (
+                item['url'],
+                item['category'],
+                item['title'],
+                item['content'],
+            )
+
+            sql = 'INSERT INTO {db_name}(url,category,title,content) VALUES(%s,%s,%s,%s)'.format(db_name="Norway_dagbladet_content")
+            self.db_cur.execute(sql, values)
+            self.db_conn.commit()
+
         if isinstance(spider, TranslateBaiduSpider) or isinstance(spider, TranslateYoudaoSpider):
             values = (
                 item['category'],
@@ -93,16 +109,44 @@ class MySQLPipeline(object):
             self.db_cur.execute(sql, values)
             self.db_conn.commit()
         elif isinstance(spider, TranslateBingSpider):
-            values = (
-                item['category'],
-                item['title'],
-                item['item_id'],
-                item['content'],
-            )
-            sql = 'INSERT INTO {db_name}(source,word,md,sentence) VALUES(%s,%s,%s,%s)'.format(
-                db_name="translate_sentence_new")  # 将表名设置为参数形式
-            self.db_cur.execute(sql, values)
-            self.db_conn.commit()
+            if item:
+                values = (
+                    item['category'],
+                    item['title'],
+                    item['item_id'],
+                    item['content'],
+                )
+                sql = 'INSERT INTO {db_name}(source,word,md,sentence) VALUES(%s,%s,%s,%s)'.format(
+                    db_name="translate_sentence_new")  # 将表名设置为参数形式
+                self.db_cur.execute(sql, values)
+                self.db_conn.commit()
+
+        elif isinstance(spider, TranslateDictSpider):
+            if item:
+                values = (
+                    item['category'],
+                    item['title'],
+                    item['item_id'],
+                    item['content'],
+                )
+                sql = 'INSERT INTO {db_name}(source,word,md,sentence) VALUES(%s,%s,%s,%s)'.format(
+                    db_name="translate_sentence_new")  # 将表名设置为参数形式
+                self.db_cur.execute(sql, values)
+                self.db_conn.commit()
+
+        elif isinstance(spider, TranslateCnkiSpider):
+            if item:
+                values = (
+                    item['category'],
+                    item['title'],
+                    item['item_id'],
+                    item['content'],
+                )
+                sql = 'INSERT INTO {db_name}(source,word,md,sentence) VALUES(%s,%s,%s,%s)'.format(
+                    db_name="translate_sentence_new")  # 将表名设置为参数形式
+                self.db_cur.execute(sql, values)
+                self.db_conn.commit()
+
         elif isinstance(spider, EnglishCorpusGutenbergNewSpider):
             self.insert_db("English_corpus_gutenberg", item)
 
@@ -158,7 +202,7 @@ class RedisPipeline(object):
                 self.insert_db(spider.name, item['url'])
         elif isinstance(spider, TranslateBingSpider):
             if self.check_url_crawled(content=item.get("content"), fingerprint_key="fingerprint"):
-                item = None
+                item = {}
 
         return item
 

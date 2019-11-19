@@ -10,13 +10,12 @@ class TranslateCnkiSpider(scrapy.Spider):
     allowed_domains = ['http://dict.cnki.net/']
 
     def start_requests(self):
-        # with open(r'E:\code\spiderframe\spiderframe\files\简单句单词总.txt', 'r', encoding='utf8')as f:
-        #     for key_word in f:
-        #         keyword = key_word.strip()
-        keyword="god"
-        url = "http://dict.cnki.net/dict_result.aspx?searchword={keyword}".format(
-            keyword=keyword)
-        yield scrapy.Request(url=url, callback=self.parse, meta={'keyword': keyword}, dont_filter=True)
+        with open(r'E:\code\spiderframe\spiderframe\files\简单句单词总.txt', 'r', encoding='utf8')as f:
+            for key_word in f:
+                keyword = key_word.strip()
+                url = "http://dict.cnki.net/dict_result.aspx?searchword={keyword}".format(
+                    keyword=keyword)
+                yield scrapy.Request(url=url, callback=self.parse, meta={'keyword': keyword}, dont_filter=True)
 
 
     def parse(self,response):
