@@ -12,7 +12,7 @@ class EnglishCorpusGenlibSpider(scrapy.Spider):
         md5 = "798c486760812b47f6cd9416749da16c"
 
         with open(r"C:\Users\Administrator\Desktop\md5.txt", 'r', encoding='utf8')as f:
-            for line in f:
+            for line in f.readlines()[3788:]:
                 md5 = line.strip()
                 url = "http://93.174.95.29/fiction/{md5}".format(**locals())
                 yield scrapy.Request(url=url, callback=self.parse, dont_filter=True)
