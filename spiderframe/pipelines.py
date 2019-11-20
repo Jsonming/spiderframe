@@ -33,6 +33,7 @@ from spiderframe.spiders.translate_cnki import TranslateCnkiSpider
 from spiderframe.spiders.English_corpus_genlib import EnglishCorpusGenlibSpider
 from spiderframe.spiders.Norway_dagbladet_content import NorwayDagbladetContentSpider
 
+from spiderframe.spiders.Egypt_masrawy_content import EgyptMasrawyContentSpider
 from . import settings
 
 
@@ -87,7 +88,8 @@ class MySQLPipeline(object):
                 sql = 'INSERT INTO Img(img_name, url) VALUES(%s,%s)'
                 self.db_cur.execute(sql, (thumb_guid, url))
 
-        if isinstance(spider, NorwayDagbladetContentSpider):
+
+        if isinstance(spider, EgyptMasrawyContentSpider):
             values = (
                 item['url'],
                 item['category'],
@@ -95,8 +97,7 @@ class MySQLPipeline(object):
                 item['content'],
             )
 
-            sql = 'INSERT INTO {db_name}(url,category,title,content) VALUES(%s,%s,%s,%s)'.format(
-                db_name="Norway_dagbladet_content")
+            sql = 'INSERT INTO {db_name}(url,category,title,content) VALUES(%s,%s,%s,%s)'.format(db_name="Egypt_masrawy_content")
             self.db_cur.execute(sql, values)
             self.db_conn.commit()
 
