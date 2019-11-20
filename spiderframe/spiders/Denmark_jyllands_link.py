@@ -23,7 +23,7 @@ class DenmarkJyllandsLinkSpider(scrapy.Spider):
         for link in links:
             item = SpiderframeItem()
             item['url'] = link
-            print(item)
-            # yield item
+            # print(item)
+            yield item
 
 
