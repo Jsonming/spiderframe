@@ -25,7 +25,7 @@ class DenmarkInformationLinkSpider(scrapy.Spider):
         for link in links:
             item = SpiderframeItem()
             item['url'] = "https://www.information.dk"+link
-            print(item)
-            # yield item
+            # print(item)
+            yield item
 
 
