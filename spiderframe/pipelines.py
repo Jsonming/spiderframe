@@ -31,7 +31,7 @@ from spiderframe.spiders.translate_dict import TranslateDictSpider
 from spiderframe.spiders.translate_bing import TranslateBingSpider
 from spiderframe.spiders.translate_cnki import TranslateCnkiSpider
 from spiderframe.spiders.English_corpus_genlib import EnglishCorpusGenlibSpider
-from spiderframe.spiders.Finland_hs_content import FinlandHsContentSpider
+from spiderframe.spiders.Greece_tanea_content import GreeceTaneaContentSpider
 
 from spiderframe.spiders.Egypt_masrawy_content import EgyptMasrawyContentSpider
 from . import settings
@@ -89,7 +89,7 @@ class MySQLPipeline(object):
                 self.db_cur.execute(sql, (thumb_guid, url))
 
 
-        if isinstance(spider, FinlandHsContentSpider):
+        if isinstance(spider, GreeceTaneaContentSpider):
             values = (
                 item['url'],
                 item['category'],
@@ -97,7 +97,7 @@ class MySQLPipeline(object):
                 item['content'],
             )
 
-            sql = 'INSERT INTO {db_name}(url,category,title,content) VALUES(%s,%s,%s,%s)'.format(db_name="Finland_hs_content")
+            sql = 'INSERT INTO {db_name}(url,category,title,content) VALUES(%s,%s,%s,%s)'.format(db_name="Greece_tanea_content")
             self.db_cur.execute(sql, values)
             self.db_conn.commit()
 
