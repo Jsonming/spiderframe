@@ -21,7 +21,7 @@ class DenmarkInformationContentSpider(RedisSpider):
     }
 
     def parse(self, response):
-        title = response.xpath('//h1').extract()
+        title = response.xpath('//h1/text()').extract()
         content = response.xpath('//p/text()').extract()
         content = ''.join(content)
         content = content.replace(" ","")
