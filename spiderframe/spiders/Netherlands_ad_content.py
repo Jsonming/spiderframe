@@ -31,10 +31,6 @@ class NetherlandsAdContentSpider(RedisSpider):
         },
     }
 
-    # def make_request_from_data(self, data):
-    #     url = str(data, self.redis_encoding)
-    #     return self.make_requests_from_url(url)
-
     def make_requests_from_url(self, url):
         return FormRequest(url, dont_filter=True,headers=self.headers)
 
