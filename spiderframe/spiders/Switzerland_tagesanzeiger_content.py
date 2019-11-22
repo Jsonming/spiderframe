@@ -30,5 +30,5 @@ class SwitzerlandTagesanzeigerContentSpider(RedisSpider):
         item['category'] = response.url.split('/')[3]
         item['title'] = ''.join(title)
         item['content'] = ''.join(content)
-        print(item)
-        # yield item
+        # print(item)
+        yield item
