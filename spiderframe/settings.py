@@ -30,7 +30,7 @@ MYSQL_PASSWORD = 'sjtUser!1234'
 
 # redis setting info
 REDIS_HOST = '123.56.11.156'
-REDIS_PORT = 6379
+REDIS_PORT = 8888
 REDIS_DB_INDEX = 0
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
