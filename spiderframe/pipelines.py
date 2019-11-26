@@ -99,7 +99,7 @@ class MySQLPipeline(object):
                 self.db_cur.execute(sql, (thumb_guid, url))
 
 
-        if isinstance(spider, DenmarkInformationContentSpider):
+        if isinstance(spider, FinlandHsContentSpider):
             values = (
                 item['url'],
                 item['category'],
@@ -107,11 +107,11 @@ class MySQLPipeline(object):
                 item['content'],
             )
 
-            sql = 'INSERT INTO {db_name}(url,category,title,content) VALUES(%s,%s,%s,%s)'.format(db_name="Denmark_information_content")
+            sql = 'INSERT INTO {db_name}(url,category,title,content) VALUES(%s,%s,%s,%s)'.format(db_name="Finland_hs_content")
             self.db_cur.execute(sql, values)
             self.db_conn.commit()
 
-        if isinstance(spider, EgyptMasrawyContentSpider):
+        if isinstance(spider, PolandNewsweekContentSpider):
             values = (
                 item['url'],
                 item['category'],
@@ -119,11 +119,11 @@ class MySQLPipeline(object):
                 item['content'],
             )
 
-            sql = 'INSERT INTO {db_name}(url,category,title,content) VALUES(%s,%s,%s,%s)'.format(db_name="Egypt_masrawy_content")
+            sql = 'INSERT INTO {db_name}(url,category,title,content) VALUES(%s,%s,%s,%s)'.format(db_name="Poland_newsweek_content")
             self.db_cur.execute(sql, values)
             self.db_conn.commit()
 
-        if isinstance(spider, NetherlandsAdContentSpider):
+        if isinstance(spider, UnitedArabEmiratesAlbayanSpider):
             values = (
                 item['url'],
                 item['category'],
@@ -131,7 +131,7 @@ class MySQLPipeline(object):
                 item['content'],
             )
 
-            sql = 'INSERT INTO {db_name}(url,category,title,content) VALUES(%s,%s,%s,%s)'.format(db_name="Netherlands_ad_content")
+            sql = 'INSERT INTO {db_name}(url,category,title,content) VALUES(%s,%s,%s,%s)'.format(db_name="UnitedArabEmirates_albayan_content")
             self.db_cur.execute(sql, values)
             self.db_conn.commit()
 

@@ -42,7 +42,8 @@ class GreeceTaneaContentSpider(RedisSpider):
     def parse(self, response):
         title = response.xpath('//h1/text()').extract()
         content = response.xpath('//p/text()').extract()
-
+        content = ''.join(content)
+        content = content.replace(" ", "")
         item = SpiderframeItem()
         item['url'] = response.url
         item['category'] = response.url.split('/')[6]

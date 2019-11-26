@@ -43,7 +43,8 @@ class FinlandHsContentSpider(RedisSpider):
     def parse(self, response):
         title = response.xpath('//h1[contains(@class, "title")]/text()').extract()
         content = response.xpath('//div[@class="body"]//text()').extract()
-
+        content = ''.join(content)
+        content = content.replace(" ", "")
         item = SpiderframeItem()
         item['url'] = response.url
         item['category'] = response.url.split('/')[3]
