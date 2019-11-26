@@ -123,6 +123,18 @@ class MySQLPipeline(object):
             self.db_cur.execute(sql, values)
             self.db_conn.commit()
 
+        if isinstance(spider, NetherlandsAdContentSpider):
+            values = (
+                item['url'],
+                item['category'],
+                item['title'],
+                item['content'],
+            )
+
+            sql = 'INSERT INTO {db_name}(url,category,title,content) VALUES(%s,%s,%s,%s)'.format(db_name="Netherlands_ad_content")
+            self.db_cur.execute(sql, values)
+            self.db_conn.commit()
+
         if isinstance(spider, TranslateBaiduSpider) or isinstance(spider, TranslateYoudaoSpider):
             values = (
                 item['category'],
@@ -188,7 +200,7 @@ class RedisPipeline(object):
 
     def open_spider(self, spider):
         db_host = spider.settings.get('REDIS_HOST', 'localhost')
-        db_port = spider.settings.get('REDIS_PORT', 6379)
+        db_port = spider.settings.get('REDIS_PORT', 8888)
         db_index = spider.settings.get('REDIS_DB_INDEX', 0)
         self.db_conn = redis.StrictRedis(host=db_host, port=db_port, db=db_index)
 

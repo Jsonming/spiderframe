@@ -13,7 +13,7 @@ class DenmarkJyllandsContentSpider(RedisSpider):
 
     custom_settings = {
         'REDIS_HOST': '123.56.11.156',
-        'REDIS_PORT': 6379,
+        'REDIS_PORT': 8888,
         'REDIS_PARAMS': {
             'password': '',
             'db': 0
