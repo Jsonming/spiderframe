@@ -24,7 +24,8 @@ class DenmarkInformationContentSpider(RedisSpider):
         title = response.xpath('//h1/text()').extract()
         content = response.xpath('//p/text()').extract()
         content = ''.join(content)
-        content = content.replace(" ","")
+        content = content.replace("\n", "  ")
+        content = content.replace("\t", "  ")
         item = SpiderframeItem()
         item['url'] = response.url
         item['category'] = response.url.split('/')[3]

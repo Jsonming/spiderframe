@@ -26,7 +26,8 @@ class DenmarkJyllandsContentSpider(RedisSpider):
         # content = response.xpath('//p/text()').extract()
         # print("title : ",title)
         # content = ''.join(content)
-        # content = content.replace(" ","")
+        # content = content.replace("\n","  ")
+        #         content = content.replace("\t","  ")
         # item = SpiderframeItem()
         # item['url'] = response.url
         # item['category'] = response.url.split('/')[5]

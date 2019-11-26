@@ -23,7 +23,8 @@ class NorwayDagbladetContentSpider(RedisSpider):
     def parse(self, response):
         title = response.xpath('//h2/text()').extract()
         content = response.xpath('//p/text()').extract()
-
+        content = content.replace("\n", "  ")
+        content = content.replace("\t", "  ")
         item = SpiderframeItem()
         item['url'] = response.url
         item['category'] = response.url.split('/')[3]

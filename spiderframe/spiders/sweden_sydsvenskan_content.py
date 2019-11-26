@@ -24,7 +24,8 @@ class SwedenSydsvenskanContentSpider(RedisSpider):
         title = response.xpath('//h2/span/text()').extract()
         # subtitle = response.xpath('//p[@class="subtitle"]/text()').extract()
         content = response.xpath('//p/text()').extract()
-
+        content = content.replace("\n", "  ")
+        content = content.replace("\t", "  ")
         item = SpiderframeItem()
         item['url'] = response.url
         item['category'] = response.url.split('/')[-1]
