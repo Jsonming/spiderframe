@@ -14,7 +14,7 @@ class UnitedArabEmiratesAlittihadLinkSpider(scrapy.Spider):
         for pattern in patterns:
             patt = pattern.split("/")[2]
             if int(patt):
-                for i in range(1,3):
+                for i in range(1,2033):
                     link="https://www.alittihad.ae/Service/SectionNews.aspx?SectionID={patt}&pageSize=8&pageindex={i}".format(patt=patt,i=i)
                     yield scrapy.Request(url=link, callback=self.parse_url, dont_filter=True)
 
