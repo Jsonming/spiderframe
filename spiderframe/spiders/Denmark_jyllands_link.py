@@ -15,15 +15,16 @@ class DenmarkJyllandsLinkSpider(scrapy.Spider):
             # pattern=pattern.split('/')[3:]
             # print(pattern)
             # # link = "https://jyllands-posten.dk{pattern}/?widget=article&widgetId=8116054&subview=ajaxList&templateName=gridCol620&showBreaker=false&shown=12&pageSize=20".format(pattern=pattern)
-            # # print(link)
+            # print(link)
             yield scrapy.Request(url=link, callback=self.parse_url, dont_filter=True)
 
     def parse_url(self, response):
-        links = response.xpath('//h2/a/@href').extract()
+        links = response.xpath('//div[contains(@class, "art")]//a/@href').extract()
         for link in links:
-            item = SpiderframeItem()
-            item['url'] = link
-            # print(item)
-            yield item
+            if "https://jyllands-posten.dk" in link:
+                item = SpiderframeItem()
+                item['url'] = link
+                # print(item)
+                yield item
 
 

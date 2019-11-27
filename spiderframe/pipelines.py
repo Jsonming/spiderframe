@@ -43,6 +43,8 @@ from spiderframe.spiders.sweden_aftonbladet_content import SwedenAftonbladeConte
 from spiderframe.spiders.Switzerland_tagesanzeiger_content import SwitzerlandTagesanzeigerContentSpider
 from spiderframe.spiders.Turkey_hurriyetdailynews_content import TurkeyHurriyetdailynewsContentSpider
 from spiderframe.spiders.UnitedArabEmirates_albayan_content import UnitedArabEmiratesAlbayanSpider
+from spiderframe.spiders.Denmark_jyllands_content import DenmarkJyllandsContentSpider
+
 
 from . import settings
 
@@ -99,7 +101,7 @@ class MySQLPipeline(object):
                 self.db_cur.execute(sql, (thumb_guid, url))
 
 
-        if isinstance(spider, TurkeyHurriyetdailynewsContentSpider):
+        if isinstance(spider, DenmarkJyllandsContentSpider):
             values = (
                 item['url'],
                 item['category'],
@@ -107,11 +109,11 @@ class MySQLPipeline(object):
                 item['content'],
             )
 
-            sql = 'INSERT INTO {db_name}(url,category,title,content) VALUES(%s,%s,%s,%s)'.format(db_name="Turkey_hurriyetdailynews_content")
+            sql = 'INSERT INTO {db_name}(url,category,title,content) VALUES(%s,%s,%s,%s)'.format(db_name="Denmark_jyllands_content")
             self.db_cur.execute(sql, values)
             self.db_conn.commit()
 
-        if isinstance(spider, NorwayDagbladetContentSpider):
+        if isinstance(spider, EgyptMasrawyContentSpider):
             values = (
                 item['url'],
                 item['category'],
@@ -119,11 +121,11 @@ class MySQLPipeline(object):
                 item['content'],
             )
 
-            sql = 'INSERT INTO {db_name}(url,category,title,content) VALUES(%s,%s,%s,%s)'.format(db_name="Norway_dagbladet_content")
+            sql = 'INSERT INTO {db_name}(url,category,title,content) VALUES(%s,%s,%s,%s)'.format(db_name="Egypt_masrawy_content")
             self.db_cur.execute(sql, values)
             self.db_conn.commit()
 
-        if isinstance(spider, GreeceTaneaContentSpider):
+        if isinstance(spider, FinlandHsContentSpider):
             values = (
                 item['url'],
                 item['category'],
@@ -131,7 +133,7 @@ class MySQLPipeline(object):
                 item['content'],
             )
 
-            sql = 'INSERT INTO {db_name}(url,category,title,content) VALUES(%s,%s,%s,%s)'.format(db_name="Greece_tanea_content")
+            sql = 'INSERT INTO {db_name}(url,category,title,content) VALUES(%s,%s,%s,%s)'.format(db_name="Finland_hs_content")
             self.db_cur.execute(sql, values)
             self.db_conn.commit()
 

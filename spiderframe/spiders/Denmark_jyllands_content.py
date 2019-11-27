@@ -22,17 +22,16 @@ class DenmarkJyllandsContentSpider(RedisSpider):
 
     def parse(self, response):
         print(response.text)
-        # title = response.xpath('//h1').extract()
-        # content = response.xpath('//p/text()').extract()
-        # print("title : ",title)
+        # title = response.xpath('//h1//text()').extract()
+        # content = response.xpath('//div[contains(@class, "artView")]//text()').extract()
         # content = ''.join(content)
         # content = content.replace("\n","  ")
-        #         content = content.replace("\t","  ")
+        # content = content.replace("\t","  ")
         # item = SpiderframeItem()
         # item['url'] = response.url
         # item['category'] = response.url.split('/')[5]
         # item['title'] = ''.join(title)
         # item['content'] = content
         # print(item)
-        # yield item
+        # # yield item
 
