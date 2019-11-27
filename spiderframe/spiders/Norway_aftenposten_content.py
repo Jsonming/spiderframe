@@ -31,6 +31,5 @@ class NorwayAftenpostenContentSpider(RedisSpider):
         item['category'] = response.url.split('/')[3]
         item['title'] = ''.join(title)
         item['content'] = content
-        print(item)
-        # yield item
-
+        # print(item)
+        yield item
