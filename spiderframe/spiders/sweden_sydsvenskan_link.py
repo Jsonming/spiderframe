@@ -25,11 +25,9 @@ class SwedenSydsvenskanLinkSpider(scrapy.Spider):
         links = response.xpath('//a[@class=" teaser__text-link"]/@href').extract()
         for link in links:
             link = "https://www.sydsvenskan.se" +link
-            print(link)
-            # link = "https://www.tagesanzeiger.ch"+link
-            # item = SpiderframeItem()
-            # item['url'] = link
-            # print(item)
+            item = SpiderframeItem()
+            item['url'] = link
+            print(item)
             # yield item
 
 

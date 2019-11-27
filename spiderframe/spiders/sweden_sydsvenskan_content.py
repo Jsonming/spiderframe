@@ -21,14 +21,13 @@ class SwedenSydsvenskanContentSpider(RedisSpider):
     }
 
     def parse(self, response):
-        title = response.xpath('//h2/span/text()').extract()
-        # subtitle = response.xpath('//p[@class="subtitle"]/text()').extract()
-        content = response.xpath('//p/text()').extract()
+        title = response.xpath('//h2//text()').extract()
+        content = response.xpath('//div[@class="article-text"]/text()').extract()
         content = content.replace("\n", "  ")
         content = content.replace("\t", "  ")
         item = SpiderframeItem()
         item['url'] = response.url
-        item['category'] = response.url.split('/')[-1]
+        item['category'] = response.url.split('/')[3]
         item['title'] = ''.join(title)
         item['content'] = ''.join(content)
         yield item

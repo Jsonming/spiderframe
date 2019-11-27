@@ -125,7 +125,7 @@ class MySQLPipeline(object):
             self.db_cur.execute(sql, values)
             self.db_conn.commit()
 
-        if isinstance(spider, FinlandHsContentSpider):
+        if isinstance(spider, DenmarkJyllandsContentSpider):
             values = (
                 item['url'],
                 item['category'],
@@ -133,7 +133,7 @@ class MySQLPipeline(object):
                 item['content'],
             )
 
-            sql = 'INSERT INTO {db_name}(url,category,title,content) VALUES(%s,%s,%s,%s)'.format(db_name="Finland_hs_content")
+            sql = 'INSERT INTO {db_name}(url,category,title,content) VALUES(%s,%s,%s,%s)'.format(db_name="Denmark_jyllands_content")
             self.db_cur.execute(sql, values)
             self.db_conn.commit()
 
