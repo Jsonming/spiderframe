@@ -27,8 +27,8 @@ class SwedenSydsvenskanLinkSpider(scrapy.Spider):
             link = "https://www.sydsvenskan.se" +link
             item = SpiderframeItem()
             item['url'] = link
-            print(item)
-            # yield item
+            # print(item)
+            yield item
 
 
 

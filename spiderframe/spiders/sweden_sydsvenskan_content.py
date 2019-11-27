@@ -23,6 +23,7 @@ class SwedenSydsvenskanContentSpider(RedisSpider):
     def parse(self, response):
         title = response.xpath('//h2//text()').extract()
         content = response.xpath('//div[@class="article-text"]/text()').extract()
+        content = ''.join(content)
         content = content.replace("\n", "  ")
         content = content.replace("\t", "  ")
         item = SpiderframeItem()
