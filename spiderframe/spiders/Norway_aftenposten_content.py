@@ -4,12 +4,12 @@ from spiderframe.items import SpiderframeItem
 from scrapy_redis.spiders import RedisSpider
 
 
-class SwedenGpContentSpider(RedisSpider):
-    name = 'sweden_gp_content'
-    allowed_domains = ['www.gp.se']
-    start_urls = ['https://www.gp.se/nyheter/sverige/utbildningsministern-vill-f%C3%B6rbjuda-religi%C3%B6sa-friskolor-saknar-st%C3%B6d-1.20815709']
+class NorwayAftenpostenContentSpider(RedisSpider):
+    name = 'Norway_aftenposten_content'
+    allowed_domains = ['www.aftenposten.no']
+    start_urls = ['https://www.aftenposten.no/amagasinet/i/K31nge/julen-kan-vaere-lang-sosial-og-dyr-da-er-det-lov-aa-jukse-litt']
 
-    redis_key = 'sweden_gp_content'
+    redis_key = 'Norway_aftenposten_link'
 
     custom_settings = {
         'REDIS_HOST': '123.56.11.156',
@@ -22,13 +22,15 @@ class SwedenGpContentSpider(RedisSpider):
 
     def parse(self, response):
         title = response.xpath('//h1//text()').extract()
-        content = response.xpath('//p/text()').extract()
+        content = response.xpath('//p//text()').extract()
         content = ''.join(content)
-        content = content.replace("\n", "  ")
-        content = content.replace("\t", "  ")
+        content = content.replace("\n","  ")
+        content = content.replace("\t","  ")
         item = SpiderframeItem()
         item['url'] = response.url
         item['category'] = response.url.split('/')[3]
         item['title'] = ''.join(title)
-        item['content'] = ''.join(content)
-        yield item
+        item['content'] = content
+        print(item)
+        # yield item
+
