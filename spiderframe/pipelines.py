@@ -43,7 +43,7 @@ from spiderframe.spiders.sweden_aftonbladet_content import SwedenAftonbladeConte
 from spiderframe.spiders.Switzerland_tagesanzeiger_content import SwitzerlandTagesanzeigerContentSpider
 from spiderframe.spiders.Poland_polsat_content import PolandPolsatContentSpider
 from spiderframe.spiders.Norway_dn_content import NorwayDnContentSpider
-from spiderframe.spiders.UnitedArabEmirates_alittihad_content import UnitedArabEmiratesAlittihadContentSpider
+from spiderframe.spiders.Poland_pap_content import PolandPapContentSpider
 
 
 from . import settings
@@ -113,7 +113,7 @@ class MySQLPipeline(object):
             self.db_cur.execute(sql, values)
             self.db_conn.commit()
 
-        if isinstance(spider, UnitedArabEmiratesAlittihadContentSpider):
+        if isinstance(spider, PolandPapContentSpider):
             values = (
                 item['url'],
                 item['category'],
@@ -121,7 +121,7 @@ class MySQLPipeline(object):
                 item['content'],
             )
 
-            sql = 'INSERT INTO {db_name}(url,category,title,content) VALUES(%s,%s,%s,%s)'.format(db_name="UnitedArabEmirates_alittihad_content")
+            sql = 'INSERT INTO {db_name}(url,category,title,content) VALUES(%s,%s,%s,%s)'.format(db_name="Poland_pap_content")
             self.db_cur.execute(sql, values)
             self.db_conn.commit()
 

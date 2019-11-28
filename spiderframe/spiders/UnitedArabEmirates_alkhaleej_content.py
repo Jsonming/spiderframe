@@ -9,7 +9,7 @@ class UnitedArabEmiratesAlkhaleejContentSpider(RedisSpider):
     allowed_domains = ['www.alkhaleej.ae']
     start_urls = ['http://www.alkhaleej.ae//Home/GetPage/f53c9315-c755-48f7-a351-9dc93baa2e5a/4238dbc0-8058-44c4-b7b1-6401c9eb8449']
 
-    redis_key = 'UnitedArabEmirates_alittihad_link'
+    redis_key = 'UnitedArabEmirates_alkhaleej_link'
 
     custom_settings = {
         'REDIS_HOST': '123.56.11.156',
