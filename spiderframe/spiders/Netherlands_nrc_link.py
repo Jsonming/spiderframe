@@ -35,8 +35,8 @@ class NetherlandsNrcLinkSpider(scrapy.Spider):
     #         # yield item
 
     def start_requests(self):
-        for year in range(2001,2019):
-            for month in range(1,31):
+        for year in range(2015,2019):
+            for month in range(1,13):
                 month = str(month).zfill(2)
                 for day in range(1, 31):
                     day = str(day).zfill(2)
