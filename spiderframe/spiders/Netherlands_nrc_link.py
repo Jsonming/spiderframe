@@ -34,11 +34,20 @@ class NetherlandsNrcLinkSpider(scrapy.Spider):
     #         print(item)
     #         # yield item
 
+    def start_requests(self):
+        for year in range(2001,2019):
+            for month in range(1,31):
+                month = str(month).zfill(2)
+                for day in range(1, 31):
+                    day = str(day).zfill(2)
+                    url = "https://www.nrc.nl/nieuws/{year}/{month}/{day}/".format(year=year,month=month,day=day)
+                    yield scrapy.Request(url=url, callback=self.parse, dont_filter=True)
+
     def parse(self, response):
-        next_links = response.xpath('//a[@class="page-nav__button"]//@href').extract()
-        for next_link in next_links:
-            next_link = "https://www.nrc.nl"+next_link
-            yield scrapy.Request(url=next_link,callback=self.parse,dont_filter=True)
+    #     next_links = response.xpath('//a[@class="page-nav__button"]//@href').extract()
+    #     for next_link in next_links:
+    #         next_link = "https://www.nrc.nl"+next_link
+    #         yield scrapy.Request(url=next_link,callback=self.parse,dont_filter=True)
 
         links = response.xpath('//a[@class="nmt-item__link"]//@href').extract()
         for link in links:
