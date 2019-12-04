@@ -6,11 +6,11 @@ from spiderframe.download import you_get_download
 
 class VideoBaseSpider(RedisSpider):
     name = 'video_base'
-    redis_key = 'video_bilibili_link'
+    redis_key = 'video_baidu_link'
 
     custom_settings = {
         'REDIS_HOST': '123.56.11.156',
-        'REDIS_PORT': 6379,
+        'REDIS_PORT': 8888,
         'REDIS_PARAMS': {
             'password': '',
             'db': 0
