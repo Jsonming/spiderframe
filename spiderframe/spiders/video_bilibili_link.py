@@ -8,7 +8,7 @@ class VideoBilibiliLinkSpider(scrapy.Spider):
     name = 'video_bilibili_link'
     allowed_domains = ['search.bilibili.com']
 
-    def __init__(self, keyword="明星卸妆", *args, **kwargs):
+    def __init__(self, keyword="新手化妆", *args, **kwargs):
         super(VideoBilibiliLinkSpider, self).__init__(*args, **kwargs)
         self.keyword = keyword
 
