@@ -17,7 +17,7 @@ class TranslateBaiduSpider(scrapy.Spider):
 
     def start_requests(self):
         url = 'http://fanyi.baidu.com/translate/'
-        with open(r'C:\Users\Administrator\Desktop\work_temp\英英剩余单词表.txt', 'r', encoding='utf8')as f:
+        with open(r'C:\Users\Administrator\Desktop\199小时语料中没有标注词典词.txt', 'r', encoding='utf8')as f:
             for key_word in f:
                 keyword = key_word.strip()
                 yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)

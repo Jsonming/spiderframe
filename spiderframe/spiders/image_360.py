@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from urllib.parse import quote
 
-import demjson
+
 import scrapy
 
 from spiderframe.items import ImgsItem
