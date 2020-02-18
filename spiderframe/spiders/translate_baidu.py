@@ -18,7 +18,8 @@ class TranslateBaiduSpider(scrapy.Spider):
     def start_requests(self):
         url = 'http://fanyi.baidu.com/translate/'
         with open(r'C:\Users\Administrator\Desktop\199小时语料中没有标注词典词.txt', 'r', encoding='utf8')as f:
-            for key_word in f:
+            w = f.readlines()[4678:]
+            for key_word in w:
                 keyword = key_word.strip()
                 yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
 
@@ -67,7 +68,7 @@ class TranslateBaiduSpider(scrapy.Spider):
         except Exception as e:
             ph_en = ""
         with open(r'C:\Users\Administrator\Desktop\phonetic.txt', 'a', encoding='utf8')as f:
-            f.write(response.meta.get("keyword") + ' ' + ph_en + "\n")
+            f.write(response.meta.get("keyword") + '\t' + ph_en + "\n")
 
         # 英译英
         # edict = dict_result.get("edict")

@@ -10,38 +10,52 @@ class TranslateYoudaoSpider(scrapy.Spider):
     allowed_domains = ['dict.youdao.com']
 
     def start_requests(self):
-        with open(r'D:\datatang\spiderframe\spiderframe\files\youdaofanyi.txt', 'r', encoding='utf8')as f:
-            for key_word in f:
-                keyword = key_word.strip()
-                start_url = 'http://dict.youdao.com/w/{}/'.format(keyword)
-                yield scrapy.Request(url=start_url, callback=self.parse, dont_filter=True, meta={"keyword": keyword})
+        # with open(r'F:\Yang\spiderframe\spiderframe\files\youdaofanyi.txt', 'r', encoding='utf8')as f:
+        #     for key_word in f:
+        #         keyword = key_word.strip()
+        #         start_url = 'http://dict.youdao.com/w/{}/'.format(keyword)
+        #         yield scrapy.Request(url=start_url, callback=self.parse, dont_filter=True, meta={"keyword": keyword})
+
+        keyword = "bubbles"
+        start_url = 'http://dict.youdao.com/w/{}/'.format(keyword)
+        yield scrapy.Request(url=start_url, callback=self.parse, dont_filter=True, meta={"keyword": keyword})
 
     def parse(self, response):
-        examples = response.xpath('//div[@class="examples"]/p[1]/text()').extract()
-        dr = re.compile(r'<[^>]+>', re.S)
+        # 抓取音标
+        phonetics = response.xpath('//div[@class="baav"]/span[@class="pronounce"]')
+        for item in phonetics:
+            phonetic_text = item.xpath('./text()').extract()
+            phonetic_text = ''.join(phonetic_text).strip()
+            phonetic = item.xpath('./span[@class="phonetic"]/text()').extract()
+            phonetic = ''.join(phonetic).strip()
+            print(phonetic, phonetic_text)
 
-        if examples:
-            for example in examples:
-                collins_sentence = example.replace("...", '')
-                collins_s = dr.sub('', collins_sentence).strip()
-                md = md5(collins_s)
-                item = SpiderframeItem()
-                item['content'] = collins_s
-                item['title'] = response.meta.get("keyword")
-                item['category'] = 'youdao'
-                item['item_id'] = md
-                yield item
-
-        examplesToggle = response.xpath('//div[@id="examplesToggle"]/div/ul/li/p[1]')
-        if examplesToggle:
-            for p_node in examplesToggle:
-                p_node_str = ''.join(p_node.xpath('.//text()').extract()).strip()
-                collins_sentence = p_node_str.replace("...", '')
-                collins_s = dr.sub('', collins_sentence).strip()
-                md = md5(collins_s)
-                item = SpiderframeItem()
-                item['content'] = collins_s
-                item['title'] = response.meta.get("keyword")
-                item['category'] = 'youdao'
-                item['item_id'] = md
-                yield item
+        # 抓取例句
+        # examples = response.xpath('//div[@class="examples"]/p[1]/text()').extract()
+        # dr = re.compile(r'<[^>]+>', re.S)
+        #
+        # if examples:
+        #     for example in examples:
+        #         collins_sentence = example.replace("...", '')
+        #         collins_s = dr.sub('', collins_sentence).strip()
+        #         md = md5(collins_s)
+        #         item = SpiderframeItem()
+        #         item['content'] = collins_s
+        #         item['title'] = response.meta.get("keyword")
+        #         item['category'] = 'youdao'
+        #         item['item_id'] = md
+        #         yield item
+        #
+        # examplesToggle = response.xpath('//div[@id="examplesToggle"]/div/ul/li/p[1]')
+        # if examplesToggle:
+        #     for p_node in examplesToggle:
+        #         p_node_str = ''.join(p_node.xpath('.//text()').extract()).strip()
+        #         collins_sentence = p_node_str.replace("...", '')
+        #         collins_s = dr.sub('', collins_sentence).strip()
+        #         md = md5(collins_s)
+        #         item = SpiderframeItem()
+        #         item['content'] = collins_s
+        #         item['title'] = response.meta.get("keyword")
+        #         item['category'] = 'youdao'
+        #         item['item_id'] = md
+        #         yield item
