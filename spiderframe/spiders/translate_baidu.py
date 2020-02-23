@@ -17,11 +17,15 @@ class TranslateBaiduSpider(scrapy.Spider):
 
     def start_requests(self):
         url = 'http://fanyi.baidu.com/translate/'
-        with open(r'C:\Users\Administrator\Desktop\199小时语料中没有标注词典词.txt', 'r', encoding='utf8')as f:
-            w = f.readlines()[4678:]
-            for key_word in w:
-                keyword = key_word.strip()
-                yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
+        # with open(r'F:\Yang\spiderframe\spiderframe\files\英语-词典.txt', 'r', encoding='utf8')as f:
+        #     w = f.readlines()[10000:20000]
+        #     for key_word in w:
+        #         keyword = key_word.strip()
+        #         yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
+
+        keyword = "sustainability"
+        yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
+
 
     def parse(self, response):
         # windows_gtk = re.findall(";window.gtk = (.*?);</script>", response.text)[0][1:-1]
@@ -57,7 +61,7 @@ class TranslateBaiduSpider(scrapy.Spider):
                                  meta={"keyword": query})
 
     def parse_item(self, response):
-        # print(response.text)
+        print(response.text)
 
         json_data = json.loads(response.text)
         dr = re.compile(r'<[^>]+>', re.S)
@@ -67,8 +71,10 @@ class TranslateBaiduSpider(scrapy.Spider):
             ph_en = dict_result.get("simple_means", {}).get("symbols")[0].get("ph_en")
         except Exception as e:
             ph_en = ""
-        with open(r'C:\Users\Administrator\Desktop\phonetic.txt', 'a', encoding='utf8')as f:
-            f.write(response.meta.get("keyword") + '\t' + ph_en + "\n")
+
+        print(ph_en)
+        # with open(r'C:\Users\Administrator\Desktop\phonetic.txt', 'a', encoding='utf8')as f:
+        #     f.write(response.meta.get("keyword") + '\t' + ph_en + "\n")
 
         # 英译英
         # edict = dict_result.get("edict")

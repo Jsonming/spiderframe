@@ -10,25 +10,41 @@ class TranslateYoudaoSpider(scrapy.Spider):
     allowed_domains = ['dict.youdao.com']
 
     def start_requests(self):
-        # with open(r'F:\Yang\spiderframe\spiderframe\files\youdaofanyi.txt', 'r', encoding='utf8')as f:
-        #     for key_word in f:
-        #         keyword = key_word.strip()
-        #         start_url = 'http://dict.youdao.com/w/{}/'.format(keyword)
-        #         yield scrapy.Request(url=start_url, callback=self.parse, dont_filter=True, meta={"keyword": keyword})
+        # with open(r'C:\Users\Administrator\Desktop\临时\英英音标-50584.txt', 'r', encoding='utf8')as f:
+        # with open(r'F:\Yang\spiderframe\spiderframe\files\wiki_word.txt', 'r', encoding='utf8')as f:
+        # with open(r'C:\Users\Administrator\Desktop\临时\英语-词典.txt', 'r', encoding='utf8')as f:
+        with open(r'F:\Yang\spiderframe\spiderframe\files\two_words.txt', 'r', encoding='utf8')as f:
 
-        keyword = "bubbles"
-        start_url = 'http://dict.youdao.com/w/{}/'.format(keyword)
-        yield scrapy.Request(url=start_url, callback=self.parse, dont_filter=True, meta={"keyword": keyword})
+            for key_word in f.readlines()[200000:]:
+                keyword = key_word.strip().split("\t")[0]
+                start_url = 'http://dict.youdao.com/w/{}/'.format(keyword)
+                yield scrapy.Request(url=start_url, callback=self.parse, dont_filter=True, meta={"keyword": keyword})
+
+        # keyword = "sustainability"
+        # start_url = 'http://dict.youdao.com/w/{}/'.format(keyword)
+        # yield scrapy.Request(url=start_url, callback=self.parse, dont_filter=True, meta={"keyword": keyword})
 
     def parse(self, response):
         # 抓取音标
+        ph = []
+        ph.append(response.meta.get("keyword"))
         phonetics = response.xpath('//div[@class="baav"]/span[@class="pronounce"]')
         for item in phonetics:
             phonetic_text = item.xpath('./text()').extract()
             phonetic_text = ''.join(phonetic_text).strip()
             phonetic = item.xpath('./span[@class="phonetic"]/text()').extract()
             phonetic = ''.join(phonetic).strip()
-            print(phonetic, phonetic_text)
+            ph.append(phonetic)
+            # if phonetic_text == "英":
+            #     ph.append(phonetic)
+
+        print(ph)
+        with open(r'F:\Yang\spiderframe\spiderframe\files\two_phonetic.txt', 'a', encoding='utf8')as f:
+        # with open(r'C:\Users\Administrator\Desktop\英语词典_phonetic.txt', 'a', encoding='utf8')as f:
+        # with open(r'C:\Users\Administrator\Desktop\phonetic.txt', 'a', encoding='utf8')as f:
+
+            f.write('\t'.join(ph) + "\n")
+
 
         # 抓取例句
         # examples = response.xpath('//div[@class="examples"]/p[1]/text()').extract()
