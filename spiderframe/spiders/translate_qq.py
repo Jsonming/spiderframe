@@ -15,7 +15,7 @@ class TranslateQQSpider(scrapy.Spider):
     start_urls = ['https://fanyi.qq.com/']
 
     def start_requests(self):
-        with open(r'E:\code\spiderframe\spiderframe\files\简单句单词总.txt', 'r', encoding='utf8')as f:
+        with open(r'D:\Workspace\spiderframe\spiderframe\files\commen_words.txt', 'r', encoding='utf8')as f:
             for key_word in f:
                 keyword = key_word.strip()
                 pj = Py4Js()
@@ -37,4 +37,5 @@ class TranslateQQSpider(scrapy.Spider):
                             item['title'] = response.meta.get("keyword")
                             item['category'] = 'qq'
                             item['item_id'] = md
-                            yield item
+                            # yield item
+                            print(item)

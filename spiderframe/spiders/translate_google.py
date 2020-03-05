@@ -13,10 +13,13 @@ class TranslateGoogleSpider(scrapy.Spider):
     name = 'translate_google'
     allowed_domains = ['translate.google.cn']
     start_urls = ['http://translate.google.cn/']
+    custom_settings = {
+        "DOWNLOAD_DELAY": 2
+    }
 
     def start_requests(self):
-        with open(r'F:\Yang\spiderframe\spiderframe\files\text.txt', 'r', encoding='utf8')as f:
-            for key_word in f:
+        with open(r'D:\Workspace\spiderframe\spiderframe\files\commen_words.txt', 'r', encoding='utf8')as f:
+            for key_word in f.readlines()[171000:]:
                 keyword = key_word.strip()
                 pj = Py4Js()
                 tk = pj.get_tk(keyword)
@@ -28,8 +31,11 @@ class TranslateGoogleSpider(scrapy.Spider):
     def parse(self, response):
         # 抓取读音
         resp = json.loads(response.text)[0][-1]
-        pronunciation = resp[-1]
-        print(pronunciation)
+        if len(resp) == 4:
+            pronunciation = resp[-1].split(",")
+            pronunciation = ["["+item+"]" for item in pronunciation]
+            with open(r'D:\Workspace\spiderframe\spiderframe\files\google_phonetic.txt', 'a', encoding='utf8')as f:
+                f.write(response.meta.get("keyword") + "\t" + '\t'.join(pronunciation) + "\n")
 
         # 抓取例句
         # dr = re.compile(r'<[^>]+>', re.S)

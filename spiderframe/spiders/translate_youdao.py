@@ -8,14 +8,18 @@ from spiderframe.items import SpiderframeItem
 class TranslateYoudaoSpider(scrapy.Spider):
     name = 'translate_youdao'
     allowed_domains = ['dict.youdao.com']
+    custom_settings = {
+        'DOWNLOAD_DELAY': 0.1
+    }
 
     def start_requests(self):
         # with open(r'C:\Users\Administrator\Desktop\临时\英英音标-50584.txt', 'r', encoding='utf8')as f:
         # with open(r'F:\Yang\spiderframe\spiderframe\files\wiki_word.txt', 'r', encoding='utf8')as f:
         # with open(r'C:\Users\Administrator\Desktop\临时\英语-词典.txt', 'r', encoding='utf8')as f:
-        with open(r'F:\Yang\spiderframe\spiderframe\files\two_words.txt', 'r', encoding='utf8')as f:
+        # with open(r'F:\Yang\spiderframe\spiderframe\files\two_words.txt', 'r', encoding='utf8')as f:
+        with open(r'D:\Workspace\spiderframe\spiderframe\files\lower_word.txt', 'r', encoding='utf8')as f:
 
-            for key_word in f.readlines()[200000:]:
+            for key_word in f.readlines()[:500000]:
                 keyword = key_word.strip().split("\t")[0]
                 start_url = 'http://dict.youdao.com/w/{}/'.format(keyword)
                 yield scrapy.Request(url=start_url, callback=self.parse, dont_filter=True, meta={"keyword": keyword})
@@ -25,6 +29,11 @@ class TranslateYoudaoSpider(scrapy.Spider):
         # yield scrapy.Request(url=start_url, callback=self.parse, dont_filter=True, meta={"keyword": keyword})
 
     def parse(self, response):
+        word_tag = response.xpath('//h2[@class="wordbook-js"]/span/text()').extract()
+        if word_tag:
+            with open(r'D:\Workspace\spiderframe\spiderframe\files\mark_sure_word.txt', 'a', encoding='utf8')as m_f:
+                m_f.write(response.meta.get("keyword") + "\n")
+
         # 抓取音标
         ph = []
         ph.append(response.meta.get("keyword"))
@@ -38,13 +47,13 @@ class TranslateYoudaoSpider(scrapy.Spider):
             # if phonetic_text == "英":
             #     ph.append(phonetic)
 
-        print(ph)
-        with open(r'F:\Yang\spiderframe\spiderframe\files\two_phonetic.txt', 'a', encoding='utf8')as f:
+        # print(ph)
+        # with open(r'F:\Yang\spiderframe\spiderframe\files\four_phonetic.txt', 'a', encoding='utf8')as f:
         # with open(r'C:\Users\Administrator\Desktop\英语词典_phonetic.txt', 'a', encoding='utf8')as f:
         # with open(r'C:\Users\Administrator\Desktop\phonetic.txt', 'a', encoding='utf8')as f:
-
-            f.write('\t'.join(ph) + "\n")
-
+        # with open(r'D:\Workspace\spiderframe\spiderframe\files\lower_phonetic.txt', 'a', encoding='utf8')as f:
+        #     f.write('\t'.join(ph) + "\n")
+        #
 
         # 抓取例句
         # examples = response.xpath('//div[@class="examples"]/p[1]/text()').extract()

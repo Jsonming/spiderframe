@@ -14,18 +14,19 @@ class TranslateBaiduSpider(scrapy.Spider):
     name = 'translate_baidu'
     allowed_domains = ['fanyi.baidu.com/translate']
     start_urls = ['http://www.baidu.com']
+    custom_setting = {
+        "DOWNLOAD_DELAY": 2
+    }
 
     def start_requests(self):
         url = 'http://fanyi.baidu.com/translate/'
-        # with open(r'F:\Yang\spiderframe\spiderframe\files\英语-词典.txt', 'r', encoding='utf8')as f:
-        #     w = f.readlines()[10000:20000]
-        #     for key_word in w:
-        #         keyword = key_word.strip()
-        #         yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
+        with open(r'D:\Workspace\spiderframe\spiderframe\files\commen_words.txt', 'r', encoding='utf8')as f:
+            for key_word in f.readlines()[53192:100000]:
+                keyword = key_word.strip()
+                yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
 
-        keyword = "sustainability"
-        yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
-
+        # keyword = "sustainability"
+        # yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
 
     def parse(self, response):
         # windows_gtk = re.findall(";window.gtk = (.*?);</script>", response.text)[0][1:-1]
@@ -61,8 +62,6 @@ class TranslateBaiduSpider(scrapy.Spider):
                                  meta={"keyword": query})
 
     def parse_item(self, response):
-        print(response.text)
-
         json_data = json.loads(response.text)
         dr = re.compile(r'<[^>]+>', re.S)
 
@@ -72,9 +71,14 @@ class TranslateBaiduSpider(scrapy.Spider):
         except Exception as e:
             ph_en = ""
 
-        print(ph_en)
-        # with open(r'C:\Users\Administrator\Desktop\phonetic.txt', 'a', encoding='utf8')as f:
-        #     f.write(response.meta.get("keyword") + '\t' + ph_en + "\n")
+        try:
+            ph_am = dict_result.get("simple_means", {}).get("symbols")[0].get("ph_am")
+        except Exception as e:
+            ph_am = ""
+
+        print(ph_en, ph_am)
+        with open(r'D:\Workspace\spiderframe\spiderframe\files\baidu_phonetic.txt', 'a', encoding='utf8')as f:
+            f.write(response.meta.get("keyword") + '\t' + ph_en + '\t' + ph_am + "\n")
 
         # 英译英
         # edict = dict_result.get("edict")
