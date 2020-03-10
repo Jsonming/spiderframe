@@ -1,59 +1,57 @@
 # -*- coding: utf-8 -*-
-import re
 import scrapy
-from spiderframe.common.common import md5
+from scrapy_redis.spiders import RedisSpider
+
 from spiderframe.items import SpiderframeItem
 
 
-class TranslateYoudaoSpider(scrapy.Spider):
+class TranslateYoudaoSpider(RedisSpider):
     name = 'translate_youdao'
     allowed_domains = ['dict.youdao.com']
+    redis_key = 'words'
     custom_settings = {
-        'DOWNLOAD_DELAY': 0.1
+        'DOWNLOAD_DELAY': 0.1,
+        'REDIS_HOST': '123.56.11.156',
+        'REDIS_PORT': 8888,
+        'REDIS_PARAMS': {
+            'password': '',
+            'db': 0
+        },
     }
 
     def start_requests(self):
-        # with open(r'C:\Users\Administrator\Desktop\临时\英英音标-50584.txt', 'r', encoding='utf8')as f:
-        # with open(r'F:\Yang\spiderframe\spiderframe\files\wiki_word.txt', 'r', encoding='utf8')as f:
-        # with open(r'C:\Users\Administrator\Desktop\临时\英语-词典.txt', 'r', encoding='utf8')as f:
-        # with open(r'F:\Yang\spiderframe\spiderframe\files\two_words.txt', 'r', encoding='utf8')as f:
-        with open(r'D:\Workspace\spiderframe\spiderframe\files\lower_word.txt', 'r', encoding='utf8')as f:
-
-            for key_word in f.readlines()[:500000]:
+        with open(r'D:\Workspace\spiderframe\spiderframe\files\commen_words.txt', 'r', encoding='utf8')as f:
+            for key_word in f.readlines()[:5]:
                 keyword = key_word.strip().split("\t")[0]
                 start_url = 'http://dict.youdao.com/w/{}/'.format(keyword)
                 yield scrapy.Request(url=start_url, callback=self.parse, dont_filter=True, meta={"keyword": keyword})
 
-        # keyword = "sustainability"
-        # start_url = 'http://dict.youdao.com/w/{}/'.format(keyword)
-        # yield scrapy.Request(url=start_url, callback=self.parse, dont_filter=True, meta={"keyword": keyword})
-
     def parse(self, response):
+        # 验证单词是否合法
         word_tag = response.xpath('//h2[@class="wordbook-js"]/span/text()').extract()
         if word_tag:
-            with open(r'D:\Workspace\spiderframe\spiderframe\files\mark_sure_word.txt', 'a', encoding='utf8')as m_f:
-                m_f.write(response.meta.get("keyword") + "\n")
+            item = SpiderframeItem()
+            item['content'] = word_tag
+            item['category'] = 'youdao'
+            item["title"] = ''
+            item["url"] = response.url
+            yield item
 
         # 抓取音标
-        ph = []
-        ph.append(response.meta.get("keyword"))
-        phonetics = response.xpath('//div[@class="baav"]/span[@class="pronounce"]')
-        for item in phonetics:
-            phonetic_text = item.xpath('./text()').extract()
-            phonetic_text = ''.join(phonetic_text).strip()
-            phonetic = item.xpath('./span[@class="phonetic"]/text()').extract()
-            phonetic = ''.join(phonetic).strip()
-            ph.append(phonetic)
-            # if phonetic_text == "英":
-            #     ph.append(phonetic)
+        # ph = []
+        # ph.append(response.meta.get("keyword"))
+        # phonetics = response.xpath('//div[@class="baav"]/span[@class="pronounce"]')
+        # for item in phonetics:
+        #     phonetic_text = item.xpath('./text()').extract()
+        #     phonetic_text = ''.join(phonetic_text).strip()
+        #     phonetic = item.xpath('./span[@class="phonetic"]/text()').extract()
+        #     phonetic = ''.join(phonetic).strip()
+        #     ph.append(phonetic)
+        # if phonetic_text == "英":
+        #     ph.append(phonetic)
 
-        # print(ph)
-        # with open(r'F:\Yang\spiderframe\spiderframe\files\four_phonetic.txt', 'a', encoding='utf8')as f:
-        # with open(r'C:\Users\Administrator\Desktop\英语词典_phonetic.txt', 'a', encoding='utf8')as f:
-        # with open(r'C:\Users\Administrator\Desktop\phonetic.txt', 'a', encoding='utf8')as f:
         # with open(r'D:\Workspace\spiderframe\spiderframe\files\lower_phonetic.txt', 'a', encoding='utf8')as f:
         #     f.write('\t'.join(ph) + "\n")
-        #
 
         # 抓取例句
         # examples = response.xpath('//div[@class="examples"]/p[1]/text()').extract()

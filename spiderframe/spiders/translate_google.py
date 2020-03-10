@@ -19,7 +19,7 @@ class TranslateGoogleSpider(scrapy.Spider):
 
     def start_requests(self):
         with open(r'D:\Workspace\spiderframe\spiderframe\files\commen_words.txt', 'r', encoding='utf8')as f:
-            for key_word in f.readlines()[171000:]:
+            for key_word in f.readlines()[20542:260000]:
                 keyword = key_word.strip()
                 pj = Py4Js()
                 tk = pj.get_tk(keyword)

@@ -45,7 +45,6 @@ from spiderframe.spiders.Greece_enet_content import GreeceEnetContentSpider
 from spiderframe.spiders.Denmark_politiken_content import DenmarkPolitikenContentSpider
 from spiderframe.spiders.Netherlands_nrc_content import NetherlandsNrcContentSpider
 
-
 from . import settings
 
 
@@ -100,7 +99,6 @@ class MySQLPipeline(object):
                 sql = 'INSERT INTO Img(img_name, url) VALUES(%s,%s)'
                 self.db_cur.execute(sql, (thumb_guid, url))
 
-
         if isinstance(spider, GreeceEnetContentSpider):
             values = (
                 item['url'],
@@ -109,7 +107,8 @@ class MySQLPipeline(object):
                 item['content'],
             )
 
-            sql = 'INSERT INTO {db_name}(url,category,title,content) VALUES(%s,%s,%s,%s)'.format(db_name="Greece_enet_content")
+            sql = 'INSERT INTO {db_name}(url,category,title,content) VALUES(%s,%s,%s,%s)'.format(
+                db_name="Greece_enet_content")
             self.db_cur.execute(sql, values)
             self.db_conn.commit()
 
@@ -121,7 +120,8 @@ class MySQLPipeline(object):
                 item['content'],
             )
 
-            sql = 'INSERT INTO {db_name}(url,category,title,content) VALUES(%s,%s,%s,%s)'.format(db_name="Netherlands_nrc_content")
+            sql = 'INSERT INTO {db_name}(url,category,title,content) VALUES(%s,%s,%s,%s)'.format(
+                db_name="Netherlands_nrc_content")
             self.db_cur.execute(sql, values)
             self.db_conn.commit()
 
@@ -133,19 +133,19 @@ class MySQLPipeline(object):
                 item['content'],
             )
 
-            sql = 'INSERT INTO {db_name}(url,category,title,content) VALUES(%s,%s,%s,%s)'.format(db_name="Egypt_masrawy_content")
+            sql = 'INSERT INTO {db_name}(url,category,title,content) VALUES(%s,%s,%s,%s)'.format(
+                db_name="Egypt_masrawy_content")
             self.db_cur.execute(sql, values)
             self.db_conn.commit()
 
         if isinstance(spider, TranslateBaiduSpider) or isinstance(spider, TranslateYoudaoSpider):
             values = (
+                item['url'],
                 item['category'],
-                item['title'],
-                item['item_id'],
                 item['content'],
             )
-            sql = 'INSERT INTO {db_name}(source,word,md,sentence) VALUES(%s,%s,%s,%s)'.format(
-                db_name="translate_sentence")  # 将表名设置为参数形式
+            sql = 'INSERT INTO {db_name}(url,category,content) VALUES(%s,%s,%s)'.format(
+                db_name="make_sure_word")  # 将表名设置为参数形式
             self.db_cur.execute(sql, values)
             self.db_conn.commit()
         elif isinstance(spider, TranslateBingSpider):

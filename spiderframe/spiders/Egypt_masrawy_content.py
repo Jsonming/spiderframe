@@ -30,31 +30,36 @@ class EgyptMasrawyContentSpider(scrapy.Spider):
     #     },
     # }
 
-    # def start_requests(self):
-    #     import pymysql
-    #     conn = pymysql.connect(
-    #         host='123.56.11.156',
-    #         port=3306,
-    #         user='sjtUser',
-    #         passwd='sjtUser!1234',
-    #         db='spiderframe',
-    #         charset='utf8',
-    #     )
-    #
-    #     with conn.cursor() as cursor:
-    #         sql = "select url from Egypt_masrawy_content22;"
-    #         cursor.execute(sql)
-    #         while True:
-    #             conn.ping()
-    #             result = cursor.fetchone()
-    #             if result:
-    #                 url = result[0]
-    #                 yield scrapy.Request(url=url, callback=self.parse, dont_filter=True)
+    def start_requests(self):
+        import pymysql
+        conn = pymysql.connect(
+            host='123.56.11.156',
+            port=3306,
+            user='sjtUser',
+            passwd='sjtUser!1234',
+            db='spiderframe',
+            charset='utf8',
+        )
+
+        with conn.cursor() as cursor:
+            sql = "select url from Egypt_masrawy_content limit 100;"
+            cursor.execute(sql)
+            for i in range(10):
+                conn.ping()
+                result = cursor.fetchmany(size=10)
+                for item in result:
+                    url = item[0]
+                    # print(url)
+                    yield scrapy.Request(url=url, callback=self.parse, meta={"batch": i}, dont_filter=True)
 
     def parse(self, response):
         title = response.xpath('//h1/text()').extract()
         contents = response.xpath('//div[@class="ArticleDetails details"]/p//text()').extract()
-        with open('10.txt', 'a', encoding='utf8')as f:
+        print(response.meta.get("batch"))
+
+        with open(r'D:\Workspace\spiderframe\spiderframe\files\text\{}.txt'.format(response.meta.get("batch")), 'a',
+                  encoding='utf8')as f:
+
             for item in contents:
                 f.write(item + "\n")
 
