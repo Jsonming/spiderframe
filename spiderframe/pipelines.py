@@ -138,7 +138,7 @@ class MySQLPipeline(object):
             self.db_cur.execute(sql, values)
             self.db_conn.commit()
 
-        if isinstance(spider, TranslateBaiduSpider) or isinstance(spider, TranslateYoudaoSpider):
+        if isinstance(spider, TranslateBaiduSpider):
             values = (
                 item['url'],
                 item['category'],
@@ -148,16 +148,28 @@ class MySQLPipeline(object):
                 db_name="make_sure_word")  # 将表名设置为参数形式
             self.db_cur.execute(sql, values)
             self.db_conn.commit()
+
+        elif isinstance(spider, TranslateYoudaoSpider):
+            values = (
+                item['title'],
+                item['category'],
+                item['content'],
+                item['item_name'],
+            )
+            sql = 'INSERT INTO {db_name}(word,youdao_show_word,youdao_en_phonetic, youdao_am_phonetic) ' \
+                  'VALUES(%s,%s,%s,%s)'.format(db_name="English_word_phonetic")
+            self.db_cur.execute(sql, values)
+            self.db_conn.commit()
+
         elif isinstance(spider, TranslateBingSpider):
             if item:
                 values = (
                     item['category'],
-                    item['title'],
-                    item['item_id'],
                     item['content'],
+                    item['item_name'],
+                    item['title'],
                 )
-                sql = 'INSERT INTO {db_name}(source,word,md,sentence) VALUES(%s,%s,%s,%s)'.format(
-                    db_name="translate_sentence_new")  # 将表名设置为参数形式
+                sql = "update English_word_phonetic set bing_show_word=%s,bing_en_phonetic=%s,bing_am_phonetic=%s where word=%s"
                 self.db_cur.execute(sql, values)
                 self.db_conn.commit()
 
@@ -189,6 +201,7 @@ class MySQLPipeline(object):
 
         elif isinstance(spider, EnglishCorpusGutenbergNewSpider):
             self.insert_db("English_corpus_gutenberg", item)
+
         elif isinstance(spider, EnglishCorpusGenlibSpider):
             self.insert_db(spider.name, item)
 
@@ -242,10 +255,6 @@ class RedisPipeline(object):
         elif spider.name.endswith("content"):
             if not item['content']:
                 self.insert_db(spider.name, item['url'])
-        elif isinstance(spider, TranslateBingSpider):
-            if self.check_url_crawled(content=item.get("content"), fingerprint_key="fingerprint"):
-                item = {}
-
         return item
 
 

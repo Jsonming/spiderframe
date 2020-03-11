@@ -2,7 +2,7 @@
 import scrapy
 from spiderframe.common.common import md5
 from spiderframe.items import SpiderframeItem
-
+import re
 
 class TranslateBingSpider(scrapy.Spider):
     name = 'translate_bing'
@@ -19,9 +19,9 @@ class TranslateBingSpider(scrapy.Spider):
         #             yield scrapy.Request(url=url, callback=self.parse, meta={'keyword': keyword}, dont_filter=True)
 
         # 抓取音标
-        with open(r'D:\Workspace\spiderframe\spiderframe\files\commen_words.txt', 'r', encoding='utf8')as f:
-            for key_word in f.readlines()[200000:]:
-                keyword = key_word.strip()
+        with open(r'D:\Workspace\workscript\work_script\demo.txt', 'r', encoding='utf8')as f:
+            for key_word in f.readlines()[:]:
+                keyword = key_word.strip().split()[0]
                 url = "https://cn.bing.com/dict/search?q={}&qs=n&form=Z9LH5&sp=-1&pq=food&sc=8-4".format(keyword)
                 yield scrapy.Request(url=url, callback=self.parse, meta={'keyword': keyword}, dont_filter=True)
 
@@ -39,21 +39,28 @@ class TranslateBingSpider(scrapy.Spider):
         #     item['item_id'] = md
         #     yield item
 
-        # 抓取音标
-        phonetic_us = response.xpath('//div[@class="hd_p1_1"]/div[@class="hd_prUS b_primtxt"]/text()').extract()
-        if phonetic_us:
-            phonetic_us_str = phonetic_us[0].replace("US\xa0", '')
-        else:
-            phonetic_us_str = ''
+        word = re.findall("q=(.*?)&qs=", response.url)[0]
 
-        phonetic_k = response.xpath('//div[@class="hd_p1_1"]/div[@class="hd_pr b_primtxt"]/text()').extract()
-        if phonetic_k:
-            phonetic_k_str = phonetic_k[0].replace("UK\xa0", '')
-        else:
-            phonetic_k_str = ""
-        pronunciation = (phonetic_k_str, phonetic_us_str)
+        word_tag = response.xpath('//div[@class="hd_area"]//h1/strong/text()').extract()  # 显示单词
+        if word_tag:
+            # 抓取音标
+            phonetic_us = response.xpath('//div[@class="hd_p1_1"]/div[@class="hd_prUS b_primtxt"]/text()').extract()
+            if phonetic_us:
+                phonetic_us_str = phonetic_us[0].replace("US\xa0", '')
+            else:
+                phonetic_us_str = ''
 
-        with open(r'D:\Workspace\spiderframe\spiderframe\files\bing_phonetic.txt', 'a', encoding='utf8')as f:
-            f.write(response.meta.get("keyword") + "\t" + '\t'.join(pronunciation) + "\n")
+            phonetic_k = response.xpath('//div[@class="hd_p1_1"]/div[@class="hd_pr b_primtxt"]/text()').extract()
+            if phonetic_k:
+                phonetic_k_str = phonetic_k[0].replace("UK\xa0", '')
+            else:
+                phonetic_k_str = ""
+
+            item = SpiderframeItem()
+            item['title'] = word  # title  字段 存单词
+            item['category'] = word_tag[0]  # category 存显示的单词
+            item['content'] = phonetic_k_str  # content 字段存 英式英语
+            item['item_name'] = phonetic_us_str  # category 字段  美式英语
+            yield item
 
 

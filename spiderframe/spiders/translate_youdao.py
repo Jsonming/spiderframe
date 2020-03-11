@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 import scrapy
-from scrapy_redis.spiders import RedisSpider
-
 from spiderframe.items import SpiderframeItem
+from scrapy_redis.spiders import RedisSpider
 
 
 class TranslateYoudaoSpider(RedisSpider):
     name = 'translate_youdao'
     allowed_domains = ['dict.youdao.com']
-    redis_key = 'words'
+    redis_key = 'youdao_word_urls'
     custom_settings = {
         'DOWNLOAD_DELAY': 0.1,
         'REDIS_HOST': '123.56.11.156',
@@ -20,38 +19,44 @@ class TranslateYoudaoSpider(RedisSpider):
     }
 
     def start_requests(self):
-        with open(r'D:\Workspace\spiderframe\spiderframe\files\commen_words.txt', 'r', encoding='utf8')as f:
-            for key_word in f.readlines()[:5]:
-                keyword = key_word.strip().split("\t")[0]
+        with open(r'D:\Workspace\workscript\work_script\demo.txt', 'r', encoding='utf8')as f:
+            for key_word in f.readlines()[:1]:
+                keyword = key_word.strip().split()[0]
                 start_url = 'http://dict.youdao.com/w/{}/'.format(keyword)
-                yield scrapy.Request(url=start_url, callback=self.parse, dont_filter=True, meta={"keyword": keyword})
+                yield scrapy.Request(url=start_url, callback=self.parse, dont_filter=True)
 
     def parse(self, response):
         # 验证单词是否合法
-        word_tag = response.xpath('//h2[@class="wordbook-js"]/span/text()').extract()
-        if word_tag:
-            item = SpiderframeItem()
-            item['content'] = word_tag
-            item['category'] = 'youdao'
-            item["title"] = ''
-            item["url"] = response.url
-            yield item
+        # word_tag = response.xpath('//h2[@class="wordbook-js"]/span/text()').extract()
+        # if word_tag:
+        #     item = SpiderframeItem()
+        #     item['content'] = word_tag
+        #     item['category'] = 'youdao'
+        #     item["title"] = ''
+        #     item["url"] = response.url
+        #     yield item
 
         # 抓取音标
-        # ph = []
-        # ph.append(response.meta.get("keyword"))
-        # phonetics = response.xpath('//div[@class="baav"]/span[@class="pronounce"]')
-        # for item in phonetics:
-        #     phonetic_text = item.xpath('./text()').extract()
-        #     phonetic_text = ''.join(phonetic_text).strip()
-        #     phonetic = item.xpath('./span[@class="phonetic"]/text()').extract()
-        #     phonetic = ''.join(phonetic).strip()
-        #     ph.append(phonetic)
-        # if phonetic_text == "英":
-        #     ph.append(phonetic)
+        word = response.url.split("/")[-2]  # 原始单词
+        word_tag = response.xpath('//h2[@class="wordbook-js"]/span/text()').extract()  # 显示单词
+        if word_tag:
+            pronounce = response.xpath('//div[@class="baav"]/span[@class="pronounce"]')  # 要求英音美音区分开，不采用循环的方式
+            en_phonetic, am_phonetic = '', ''
+            if len(pronounce) == 2:
+                e_phonetic = pronounce[0].xpath('./span[@class="phonetic"]/text()').extract()
+                if e_phonetic:
+                    en_phonetic = e_phonetic[0]  # 有英音
 
-        # with open(r'D:\Workspace\spiderframe\spiderframe\files\lower_phonetic.txt', 'a', encoding='utf8')as f:
-        #     f.write('\t'.join(ph) + "\n")
+                a_phonetic = pronounce[1].xpath('./span[@class="phonetic"]/text()').extract()
+                if a_phonetic:
+                    am_phonetic = a_phonetic[0]  # 有美音
+
+            item = SpiderframeItem()
+            item['title'] = word  # title  字段 存单词
+            item['category'] = word_tag[0]  # category 存显示的单词
+            item['content'] = en_phonetic  # content 字段存 英式英语
+            item['item_name'] = am_phonetic  # category 字段  美式英语
+            yield item
 
         # 抓取例句
         # examples = response.xpath('//div[@class="examples"]/p[1]/text()').extract()
