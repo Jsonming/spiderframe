@@ -9,7 +9,6 @@ class TranslateYoudaoSpider(RedisSpider):
     allowed_domains = ['dict.youdao.com']
     redis_key = 'youdao_word_urls'
     custom_settings = {
-        'DOWNLOAD_DELAY': 0.1,
         'REDIS_HOST': '123.56.11.156',
         'REDIS_PORT': 8888,
         'REDIS_PARAMS': {
@@ -18,12 +17,12 @@ class TranslateYoudaoSpider(RedisSpider):
         },
     }
 
-    def start_requests(self):
-        with open(r'D:\Workspace\workscript\work_script\demo.txt', 'r', encoding='utf8')as f:
-            for key_word in f.readlines()[:1]:
-                keyword = key_word.strip().split()[0]
-                start_url = 'http://dict.youdao.com/w/{}/'.format(keyword)
-                yield scrapy.Request(url=start_url, callback=self.parse, dont_filter=True)
+    # def start_requests(self):
+    #     with open(r'D:\Workspace\workspace\work\English_word\lower_word.txt', 'r', encoding='utf8')as f:
+    #         for key_word in f.readlines()[:1]:
+    #             keyword = key_word.strip().split()[0]
+    #             start_url = 'http://dict.youdao.com/w/{}/'.format(keyword)
+    #             yield scrapy.Request(url=start_url, callback=self.parse, dont_filter=True)
 
     def parse(self, response):
         # 验证单词是否合法
@@ -37,19 +36,22 @@ class TranslateYoudaoSpider(RedisSpider):
         #     yield item
 
         # 抓取音标
+
         word = response.url.split("/")[-2]  # 原始单词
         word_tag = response.xpath('//h2[@class="wordbook-js"]/span/text()').extract()  # 显示单词
         if word_tag:
-            pronounce = response.xpath('//div[@class="baav"]/span[@class="pronounce"]')  # 要求英音美音区分开，不采用循环的方式
+            pronounce = response.xpath('//div[@class="baav"]/span[@class="pronounce"]')  # 抓取读音
             en_phonetic, am_phonetic = '', ''
-            if len(pronounce) == 2:
-                e_phonetic = pronounce[0].xpath('./span[@class="phonetic"]/text()').extract()
-                if e_phonetic:
-                    en_phonetic = e_phonetic[0]  # 有英音
-
-                a_phonetic = pronounce[1].xpath('./span[@class="phonetic"]/text()').extract()
-                if a_phonetic:
-                    am_phonetic = a_phonetic[0]  # 有美音
+            if pronounce:
+                for item in pronounce:
+                    pronounce_lang = item.xpath("./text()").extract()  # 根据标签区分英式和美式
+                    if pronounce_lang:
+                        pronounce_text = ''.join(pronounce_lang).strip()
+                        pronounce_text = pronounce_text.replace(" '", '').replace("’", '')
+                        if pronounce_text == "英":
+                            en_phonetic = ''.join(item.xpath('./span[@class="phonetic"]/text()').extract())
+                        elif pronounce_text == "美":
+                            am_phonetic = ''.join(item.xpath('./span[@class="phonetic"]/text()').extract())
 
             item = SpiderframeItem()
             item['title'] = word  # title  字段 存单词

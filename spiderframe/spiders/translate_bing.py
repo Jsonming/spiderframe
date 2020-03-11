@@ -1,14 +1,27 @@
 # -*- coding: utf-8 -*-
-import scrapy
-from spiderframe.common.common import md5
-from spiderframe.items import SpiderframeItem
 import re
 
-class TranslateBingSpider(scrapy.Spider):
+import scrapy
+
+from spiderframe.items import SpiderframeItem
+from scrapy_redis.spiders import RedisSpider
+
+
+class TranslateBingSpider(RedisSpider):
     name = 'translate_bing'
     allowed_domains = ['cn.bing.com/']
+    redis_key = 'bing_word_urls'
+    custom_settings = {
+        'DOWNLOAD_DELAY': 0.1,
+        'REDIS_HOST': '123.56.11.156',
+        'REDIS_PORT': 8888,
+        'REDIS_PARAMS': {
+            'password': '',
+            'db': 0
+        },
+    }
 
-    def start_requests(self):
+    # def start_requests(self):
         # 抓取例句
         # with open(r'E:\code\spiderframe\spiderframe\files\简单句单词总.txt', 'r', encoding='utf8')as f:
         #     for key_word in f:
@@ -19,11 +32,11 @@ class TranslateBingSpider(scrapy.Spider):
         #             yield scrapy.Request(url=url, callback=self.parse, meta={'keyword': keyword}, dont_filter=True)
 
         # 抓取音标
-        with open(r'D:\Workspace\workscript\work_script\demo.txt', 'r', encoding='utf8')as f:
-            for key_word in f.readlines()[:]:
-                keyword = key_word.strip().split()[0]
-                url = "https://cn.bing.com/dict/search?q={}&qs=n&form=Z9LH5&sp=-1&pq=food&sc=8-4".format(keyword)
-                yield scrapy.Request(url=url, callback=self.parse, meta={'keyword': keyword}, dont_filter=True)
+        # with open(r'D:\Workspace\workscript\work_script\demo.txt', 'r', encoding='utf8')as f:
+        #     for key_word in f.readlines()[:]:
+        #         keyword = key_word.strip().split()[0]
+        #         url = "https://cn.bing.com/dict/search?q={}&qs=n&form=Z9LH5&sp=-1&pq=food&sc=8-4".format(keyword)
+        #         yield scrapy.Request(url=url, callback=self.parse, meta={'keyword': keyword}, dont_filter=True)
 
     def parse(self, response):
         # 抓取例句
@@ -62,5 +75,3 @@ class TranslateBingSpider(scrapy.Spider):
             item['content'] = phonetic_k_str  # content 字段存 英式英语
             item['item_name'] = phonetic_us_str  # category 字段  美式英语
             yield item
-
-
