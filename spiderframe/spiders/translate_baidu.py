@@ -27,14 +27,14 @@ class TranslateBaiduSpider(scrapy.Spider):
         #         keyword = key_word.strip()
         #         yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
         #
-        keyword = "seriess"
-        yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
+        # keyword = "seriess"
+        # yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
 
-        # ssdb_con = SSDBCon().connection()
-        # for i in range(1000):
-        #     item = ssdb_con.lpop("google_word_urls")
-        #     keyword = item.decode("utf8")
-        #     yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
+        ssdb_con = SSDBCon().connection()
+        for i in range(1000):
+            item = ssdb_con.lpop("baidu_word_urls")
+            keyword = item.decode("utf8")
+            yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
 
     def parse(self, response):
         # windows_gtk = re.findall(";window.gtk = (.*?);</script>", response.text)[0][1:-1]

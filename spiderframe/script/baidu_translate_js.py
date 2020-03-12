@@ -6,11 +6,14 @@
 # @File    : baidu_translate_js.py
 # @Software: PyCharm
 import execjs
+import os
 
 
 class BaiDuTranslateJS(object):
     def __init__(self):
-        with open(r"D:\Workspace\spiderframe\spiderframe\script\baidufanyi.js", "r", encoding="utf-8") as f:
+        path = os.path.abspath(os.path.dirname(__file__))
+
+        with open(os.path.join(path, "baidufanyi.js"), "r", encoding="utf-8") as f:
             js_string = f.read()
             self.sign_js = execjs.compile(js_string)
 
