@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-import re
 import scrapy
-from spiderframe.common.common import md5
+
 from spiderframe.items import SpiderframeItem
+from scrapy_redis.spiders import RedisSpider
 
 
-class TranslateDictSpider(scrapy.Spider):
+class TranslateDictSpider(RedisSpider):
     name = 'translate_dict'
     allowed_domains = ['dict.cn']
 
