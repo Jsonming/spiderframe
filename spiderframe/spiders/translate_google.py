@@ -33,9 +33,8 @@ class TranslateGoogleSpider(scrapy.Spider):
         resp = json.loads(response.text)[0][-1]
         if len(resp) == 4:
             pronunciation = resp[-1].split(",")
-            pronunciation = ["["+item+"]" for item in pronunciation]
-            with open(r'D:\Workspace\spiderframe\spiderframe\files\google_phonetic.txt', 'a', encoding='utf8')as f:
-                f.write(response.meta.get("keyword") + "\t" + '\t'.join(pronunciation) + "\n")
+            pronunciation = ["[" + item + "]" for item in pronunciation]
+            print(pronunciation)
 
         # 抓取例句
         # dr = re.compile(r'<[^>]+>', re.S)

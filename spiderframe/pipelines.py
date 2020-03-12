@@ -139,27 +139,40 @@ class MySQLPipeline(object):
             self.db_conn.commit()
 
         if isinstance(spider, TranslateBaiduSpider):
-            values = (
-                item['url'],
-                item['category'],
-                item['content'],
-            )
-            sql = 'INSERT INTO {db_name}(url,category,content) VALUES(%s,%s,%s)'.format(
-                db_name="make_sure_word")  # 将表名设置为参数形式
-            self.db_cur.execute(sql, values)
-            self.db_conn.commit()
+            if item:
+                values = (
+                    item['category'],
+                    item['content'],
+                    item['item_name'],
+                    item['title'],
+                )
+                sql = "update English_word_phonetic set baidu_show_word=%s,baidu_en_phonetic=%s,baidu_am_phonetic=%s where word=%s"
+                self.db_cur.execute(sql, values)
+                self.db_conn.commit()
+
+        elif isinstance(spider, TranslateGoogleSpider):
+            if item:
+                values = (
+                    item['category'],
+                    item['content'],
+                    item['item_name'],
+                    item['title'],
+                )
+                sql = "update English_word_phonetic set google_show_word=%s,google_en_phonetic=%s,google_am_phonetic=%s where word=%s"
+                self.db_cur.execute(sql, values)
+                self.db_conn.commit()
 
         elif isinstance(spider, TranslateYoudaoSpider):
-            values = (
-                item['title'],
-                item['category'],
-                item['content'],
-                item['item_name'],
-            )
-            sql = 'INSERT INTO {db_name}(word,youdao_show_word,youdao_en_phonetic, youdao_am_phonetic) ' \
-                  'VALUES(%s,%s,%s,%s)'.format(db_name="English_word_phonetic")
-            self.db_cur.execute(sql, values)
-            self.db_conn.commit()
+            if item:
+                values = (
+                    item['category'],
+                    item['content'],
+                    item['item_name'],
+                    item['title'],
+                )
+                sql = "update English_word_phonetic set youdao_show_word=%s,youdao_en_phonetic=%s,youdao_am_phonetic=%s where word=%s"
+                self.db_cur.execute(sql, values)
+                self.db_conn.commit()
 
         elif isinstance(spider, TranslateBingSpider):
             if item:
@@ -177,12 +190,11 @@ class MySQLPipeline(object):
             if item:
                 values = (
                     item['category'],
-                    item['title'],
-                    item['item_id'],
                     item['content'],
+                    item['item_name'],
+                    item['title'],
                 )
-                sql = 'INSERT INTO {db_name}(source,word,md,sentence) VALUES(%s,%s,%s,%s)'.format(
-                    db_name="translate_sentence_new")  # 将表名设置为参数形式
+                sql = "update English_word_phonetic set dict_show_word=%s,dict_en_phonetic=%s,dict_am_phonetic=%s where word=%s"
                 self.db_cur.execute(sql, values)
                 self.db_conn.commit()
 
