@@ -5,6 +5,7 @@ import scrapy
 from spiderframe.script.baidu_translate_js import BaiDuTranslateJS
 from spiderframe.common.common import md5
 from spiderframe.items import SpiderframeItem
+from spiderframe.common.db import SSDBCon
 
 oxford_sentence_dict = []
 usecase_sentence_dict = []
@@ -20,13 +21,20 @@ class TranslateBaiduSpider(scrapy.Spider):
 
     def start_requests(self):
         url = 'http://fanyi.baidu.com/translate/'
-        with open(r'D:\Workspace\spiderframe\spiderframe\files\commen_words.txt', 'r', encoding='utf8')as f:
-            for key_word in f.readlines()[53192:100000]:
-                keyword = key_word.strip()
-                yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
 
-        # keyword = "sustainability"
-        # yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
+        # with open(r'D:\Workspace\spiderframe\spiderframe\files\commen_words.txt', 'r', encoding='utf8')as f:
+        #     for key_word in f.readlines()[53192:100000]:
+        #         keyword = key_word.strip()
+        #         yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
+        #
+        keyword = "seriess"
+        yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
+
+        # ssdb_con = SSDBCon().connection()
+        # for i in range(1000):
+        #     item = ssdb_con.lpop("google_word_urls")
+        #     keyword = item.decode("utf8")
+        #     yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
 
     def parse(self, response):
         # windows_gtk = re.findall(";window.gtk = (.*?);</script>", response.text)[0][1:-1]
@@ -64,6 +72,7 @@ class TranslateBaiduSpider(scrapy.Spider):
     def parse_item(self, response):
         json_data = json.loads(response.text)
         dr = re.compile(r'<[^>]+>', re.S)
+        word = response.meta.get("keyword")
 
         dict_result = json_data.get("dict_result", {})
         try:
@@ -76,9 +85,17 @@ class TranslateBaiduSpider(scrapy.Spider):
         except Exception as e:
             ph_am = ""
 
-        print(ph_en, ph_am)
-        with open(r'D:\Workspace\spiderframe\spiderframe\files\baidu_phonetic.txt', 'a', encoding='utf8')as f:
-            f.write(response.meta.get("keyword") + '\t' + ph_en + '\t' + ph_am + "\n")
+        item = SpiderframeItem()
+        item['title'] = word  # title  字段 存单词
+        item['category'] = word  # category 存显示的单词
+        item['content'] = ph_en  # content 字段存 英式英语
+        item['item_name'] = ph_am  # category 字段  美式英语
+        yield item
+
+
+        # print(ph_en, ph_am)
+        # with open(r'D:\Workspace\spiderframe\spiderframe\files\baidu_phonetic.txt', 'a', encoding='utf8')as f:
+        #     f.write(response.meta.get("keyword") + '\t' + ph_en + '\t' + ph_am + "\n")
 
         # 英译英
         # edict = dict_result.get("edict")
