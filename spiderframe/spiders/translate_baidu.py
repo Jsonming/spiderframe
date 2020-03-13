@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-import re
 import json
+import re
+
 import scrapy
-from spiderframe.script.baidu_translate_js import BaiDuTranslateJS
-from spiderframe.common.common import md5
-from spiderframe.items import SpiderframeItem
+
 from spiderframe.common.db import SSDBCon
+from spiderframe.items import SpiderframeItem
+from spiderframe.script.baidu_translate_js import BaiDuTranslateJS
 
 oxford_sentence_dict = []
 usecase_sentence_dict = []
@@ -91,7 +92,6 @@ class TranslateBaiduSpider(scrapy.Spider):
         item['content'] = ph_en  # content 字段存 英式英语
         item['item_name'] = ph_am  # category 字段  美式英语
         yield item
-
 
         # print(ph_en, ph_am)
         # with open(r'D:\Workspace\spiderframe\spiderframe\files\baidu_phonetic.txt', 'a', encoding='utf8')as f:
