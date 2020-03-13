@@ -9,6 +9,7 @@ class TranslateYoudaoSpider(RedisSpider):
     allowed_domains = ['dict.youdao.com']
     redis_key = 'youdao_word_urls'
     custom_settings = {
+        'DOWNLOAD_DELAY': '0.1',
         'REDIS_HOST': '123.56.11.156',
         'REDIS_PORT': 8888,
         'REDIS_PARAMS': {
