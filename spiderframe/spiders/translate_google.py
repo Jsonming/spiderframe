@@ -29,7 +29,7 @@ class TranslateGoogleSpider(scrapy.Spider):
         #         yield scrapy.Request(url=url, callback=self.parse, dont_filter=True)
 
         ssdb_con = SSDBCon().connection()
-        for i in range(40000):
+        for i in range(70000):
             item = ssdb_con.lpop("google_word_urls")
             keyword = item.decode("utf8")
             pj = Py4Js()
