@@ -12,6 +12,7 @@ class TranslateDictSpider(RedisSpider):
     redis_key = 'dict_word_urls'
     custom_settings = {
         'REDIS_HOST': '123.56.11.156',
+        'DOWNLOAD_DELAY': '0.1',
         'REDIS_PORT': 8888,
         'REDIS_PARAMS': {
             'password': '',
