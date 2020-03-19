@@ -8,11 +8,12 @@ from scrapy_redis.spiders import RedisSpider
 
 
 class TranslateBingSpider(RedisSpider):
+# class TranslateBingSpider(scrapy.Spider):
     name = 'translate_bing'
     allowed_domains = ['cn.bing.com/']
     redis_key = 'bing_word_urls'
     custom_settings = {
-        'DOWNLOAD_DELAY': 0.1,
+        'DOWNLOAD_DELAY': 0.2,
         'REDIS_HOST': '123.56.11.156',
         'REDIS_PORT': 8888,
         'REDIS_PARAMS': {
@@ -38,6 +39,11 @@ class TranslateBingSpider(RedisSpider):
         #         url = "https://cn.bing.com/dict/search?q={}&qs=n&form=Z9LH5&sp=-1&pq=food&sc=8-4".format(keyword)
         #         yield scrapy.Request(url=url, callback=self.parse, meta={'keyword': keyword}, dont_filter=True)
 
+        # 单词抓取测试
+        # keyword = "sneaked"
+        # url = "https://cn.bing.com/dict/search?q={}&qs=n&form=Z9LH5&sp=-1&pq=food&sc=8-4".format(keyword)
+        # yield scrapy.Request(url=url, callback=self.parse, meta={'keyword': keyword}, dont_filter=True)
+
     def parse(self, response):
         # 抓取例句
         # lis = response.xpath('//div[@class="se_li"]')
@@ -52,11 +58,10 @@ class TranslateBingSpider(RedisSpider):
         #     item['item_id'] = md
         #     yield item
 
+        # 抓取音标
         word = re.findall("q=(.*?)&qs=", response.url)[0]
-
         word_tag = response.xpath('//div[@class="hd_area"]//h1/strong/text()').extract()  # 显示单词
         if word_tag:
-            # 抓取音标
             phonetic_us = response.xpath('//div[@class="hd_p1_1"]/div[@class="hd_prUS b_primtxt"]/text()').extract()
             if phonetic_us:
                 phonetic_us_str = phonetic_us[0].replace("US\xa0", '')
