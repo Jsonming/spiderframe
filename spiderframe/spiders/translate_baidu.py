@@ -32,7 +32,7 @@ class TranslateBaiduSpider(scrapy.Spider):
         # yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
 
         ssdb_con = SSDBCon().connection()
-        for i in range(1000):
+        for i in range(50000):
             item = ssdb_con.lpop("baidu_word_urls")
             keyword = item.decode("utf8")
             yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
