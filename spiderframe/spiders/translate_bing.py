@@ -7,8 +7,8 @@ from spiderframe.items import SpiderframeItem
 from scrapy_redis.spiders import RedisSpider
 
 
-class TranslateBingSpider(RedisSpider):
-# class TranslateBingSpider(scrapy.Spider):
+# class TranslateBingSpider(RedisSpider):
+class TranslateBingSpider(scrapy.Spider):
     name = 'translate_bing'
     allowed_domains = ['cn.bing.com/']
     redis_key = 'bing_word_urls'
@@ -22,7 +22,7 @@ class TranslateBingSpider(RedisSpider):
         },
     }
 
-    # def start_requests(self):
+    def start_requests(self):
         # 抓取例句
         # with open(r'E:\code\spiderframe\spiderframe\files\简单句单词总.txt', 'r', encoding='utf8')as f:
         #     for key_word in f:
@@ -40,9 +40,9 @@ class TranslateBingSpider(RedisSpider):
         #         yield scrapy.Request(url=url, callback=self.parse, meta={'keyword': keyword}, dont_filter=True)
 
         # 单词抓取测试
-        # keyword = "sneaked"
-        # url = "https://cn.bing.com/dict/search?q={}&qs=n&form=Z9LH5&sp=-1&pq=food&sc=8-4".format(keyword)
-        # yield scrapy.Request(url=url, callback=self.parse, meta={'keyword': keyword}, dont_filter=True)
+        keyword = "Sobs"
+        url = "https://cn.bing.com/dict/search?q={}&qs=n&form=Z9LH5&sp=-1&pq=food&sc=8-4".format(keyword)
+        yield scrapy.Request(url=url, callback=self.parse, meta={'keyword': keyword}, dont_filter=True)
 
     def parse(self, response):
         # 抓取例句
