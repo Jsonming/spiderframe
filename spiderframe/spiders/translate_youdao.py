@@ -25,6 +25,7 @@ class TranslateYoudaoSpider(RedisSpider):
     #             start_url = 'http://dict.youdao.com/w/{}/'.format(keyword)
     #             yield scrapy.Request(url=start_url, callback=self.parse, dont_filter=True)
 
+
     def parse(self, response):
         # 验证单词是否合法
         # word_tag = response.xpath('//h2[@class="wordbook-js"]/span/text()').extract()
@@ -42,7 +43,7 @@ class TranslateYoudaoSpider(RedisSpider):
         word_tag = response.xpath('//h2[@class="wordbook-js"]/span/text()').extract()  # 显示单词
         if word_tag:
             pronounce = response.xpath('//div[@class="baav"]/span[@class="pronounce"]')  # 抓取读音
-            en_phonetic, am_phonetic = '', ''
+            en_phonetic, am_phonetic, un_phonetic = '', '', ''
             if pronounce:
                 for item in pronounce:
                     pronounce_lang = item.xpath("./text()").extract()  # 根据标签区分英式和美式
@@ -53,12 +54,15 @@ class TranslateYoudaoSpider(RedisSpider):
                             en_phonetic = ''.join(item.xpath('./span[@class="phonetic"]/text()').extract())
                         elif pronounce_text == "美":
                             am_phonetic = ''.join(item.xpath('./span[@class="phonetic"]/text()').extract())
+                        else:
+                            un_phonetic = ''.join(item.xpath('./span[@class="phonetic"]/text()').extract())
 
             item = SpiderframeItem()
             item['title'] = word  # title  字段 存单词
             item['category'] = word_tag[0]  # category 存显示的单词
             item['content'] = en_phonetic  # content 字段存 英式英语
-            item['item_name'] = am_phonetic  # category 字段  美式英语
+            item['item_name'] = am_phonetic  # item_name 字段  美式英语
+            item['item_id'] = un_phonetic  # item_id 字段  不确定是英式还是美式的情况
             yield item
 
         # 抓取例句
