@@ -28,14 +28,14 @@ class TranslateBaiduSpider(scrapy.Spider):
         #         keyword = key_word.strip()
         #         yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
         #
-        # keyword = "seriess"
-        # yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
+        keyword = "series"
+        yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
 
-        ssdb_con = SSDBCon().connection()
-        for i in range(50000):
-            item = ssdb_con.lpop("baidu_word_urls")
-            keyword = item.decode("utf8")
-            yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
+        # ssdb_con = SSDBCon().connection()
+        # for i in range(50000):
+        #     item = ssdb_con.lpop("baidu_word_urls")
+        #     keyword = item.decode("utf8")
+        #     yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
 
     def parse(self, response):
         # windows_gtk = re.findall(";window.gtk = (.*?);</script>", response.text)[0][1:-1]
@@ -49,6 +49,7 @@ class TranslateBaiduSpider(scrapy.Spider):
         sign = node.get_sign(query, windows_gtk)
 
         url = "https://fanyi.baidu.com/v2transapi?from=en&to=zh"
+        url = "https://fanyi.baidu.com/gettts?lan=uk&text=series&spd=3&source=web"
         data = {
             'from': 'en',
             'to': "zh",
@@ -71,32 +72,37 @@ class TranslateBaiduSpider(scrapy.Spider):
                                  meta={"keyword": query})
 
     def parse_item(self, response):
-        json_data = json.loads(response.text)
-        dr = re.compile(r'<[^>]+>', re.S)
-        word = response.meta.get("keyword")
+        with open('{}.mp3'.format(response.meta.get("keyword")), 'wb')as f:
+            f.write(response.body)
 
-        dict_result = json_data.get("dict_result", {})
-        try:
-            ph_en = dict_result.get("simple_means", {}).get("symbols")[0].get("ph_en")
-        except Exception as e:
-            ph_en = ""
-
-        try:
-            ph_am = dict_result.get("simple_means", {}).get("symbols")[0].get("ph_am")
-        except Exception as e:
-            ph_am = ""
-
-        item = SpiderframeItem()
-        item['title'] = word  # title  字段 存单词
-        item['category'] = word  # category 存显示的单词
-        item['content'] = ph_en  # content 字段存 英式英语
-        item['item_name'] = ph_am  # category 字段  美式英语
-        yield item
+        # 获取音标
+        # json_data = json.loads(response.text)
+        # dr = re.compile(r'<[^>]+>', re.S)
+        # word = response.meta.get("keyword")
+        #
+        # dict_result = json_data.get("dict_result", {})
+        # try:
+        #     ph_en = dict_result.get("simple_means", {}).get("symbols")[0].get("ph_en")
+        # except Exception as e:
+        #     ph_en = ""
+        #
+        # try:
+        #     ph_am = dict_result.get("simple_means", {}).get("symbols")[0].get("ph_am")
+        # except Exception as e:
+        #     ph_am = ""
+        #
+        # item = SpiderframeItem()
+        # item['title'] = word  # title  字段 存单词
+        # item['category'] = word  # category 存显示的单词
+        # item['content'] = ph_en  # content 字段存 英式英语
+        # item['item_name'] = ph_am  # category 字段  美式英语
+        # yield item
 
         # print(ph_en, ph_am)
         # with open(r'D:\Workspace\spiderframe\spiderframe\files\baidu_phonetic.txt', 'a', encoding='utf8')as f:
         #     f.write(response.meta.get("keyword") + '\t' + ph_en + '\t' + ph_am + "\n")
 
+        # 获取句子
         # 英译英
         # edict = dict_result.get("edict")
         # if edict:
