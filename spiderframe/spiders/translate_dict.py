@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 import scrapy
-
+import pandas as pd
 from spiderframe.items import SpiderframeItem
 from scrapy_redis.spiders import RedisSpider
 
 
-class TranslateDictSpider(RedisSpider):
+class TranslateDictSpider(scrapy.Spider):
     name = 'translate_dict'
     allowed_domains = ['dict.cn']
 
@@ -20,12 +20,17 @@ class TranslateDictSpider(RedisSpider):
         },
     }
 
-    # def start_requests(self):
-    #     with open(r'D:\Workspace\workspace\work\English_word\lower_word.txt', 'r', encoding='utf8')as f:
-    #         for key_word in f.readlines()[:5]:
-    #             keyword = key_word.strip()
-    #             url = "https://dict.cn/search?q={keyword}".format(keyword=keyword)
-    #             yield scrapy.Request(url=url, callback=self.parse, meta={'keyword': keyword}, dont_filter=True)
+    def start_requests(self):
+        # with open(r'D:\Workspace\workspace\work\English_word\lower_word.txt', 'r', encoding='utf8')as f:
+
+        file = r"C:\Users\Administrator\Desktop\其他来源含有英式美式(来源相同)72981.xlsx"
+        data = pd.read_excel(file)
+        words = data.loc[data["来源"] == "海词"]["待查单词"].to_list()
+
+        for key_word in words:
+            keyword = key_word.strip()
+            url = "https://dict.cn/search?q={keyword}".format(keyword=keyword)
+            yield scrapy.Request(url=url, callback=self.parse, meta={'keyword': keyword}, dont_filter=True)
 
     def parse(self, response):
         # sentens1 = response.xpath('//div[@class="layout sort"]//li//text()').extract()
@@ -47,7 +52,7 @@ class TranslateDictSpider(RedisSpider):
         word_tag = response.xpath('//div[@class="word-cont"]/h1/text()').extract()  # 显示单词
         if word_tag:
             phonetic = response.xpath('//div[@class="phonetic"]/span')
-            en_phonetic, am_phonetic = '', ''
+            en_phonetic, am_phonetic, phonetic_word = '', '', []
             if phonetic:
                 for item in phonetic:
                     pronounce_lang = item.xpath("./text()").extract()  # 根据标签区分英式和美式
@@ -56,12 +61,23 @@ class TranslateDictSpider(RedisSpider):
                         pronounce_text = pronounce_text.replace(" '", '').replace("’", '')
                         if pronounce_text == "英":
                             en_phonetic = ''.join(item.xpath('./bdo[@lang="EN-US"]/text()').extract())
+                            en_word = ''.join(item.xpath('./i[1]/@naudio').extract())
+                            if en_word:
+                                phonetic_word.append(en_word.split("=")[-1])
                         elif pronounce_text == "美":
                             am_phonetic = ''.join(item.xpath('./bdo[@lang="EN-US"]/text()').extract())
+                            am_word = ''.join(item.xpath('./i[1]/@naudio').extract())
+                            if am_word:
+                                phonetic_word.append(am_word.split("=")[-1])
+            if phonetic_word:
+                phonetic_word = phonetic_word[0]
+            else:
+                phonetic_word = ''
 
             item = SpiderframeItem()
             item['title'] = word  # title  字段 存单词
-            item['category'] = word_tag[0]  # category 存显示的单词
+            # item['category'] = word_tag[0]  # category 存显示的单词
+            item['category'] = phonetic_word  # category 音标的单词
             item['content'] = en_phonetic  # content 字段存 英式英语
             item['item_name'] = am_phonetic  # category 字段  美式英语
             yield item
