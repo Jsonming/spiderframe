@@ -23,19 +23,19 @@ class TranslateBaiduSpider(scrapy.Spider):
     def start_requests(self):
         url = 'http://fanyi.baidu.com/translate/'
 
-        # with open(r'D:\Workspace\spiderframe\spiderframe\files\commen_words.txt', 'r', encoding='utf8')as f:
-        #     for key_word in f.readlines()[53192:100000]:
+        # with open(r'.\files\ten.txt', 'r', encoding='utf8')as f:
+        #     for key_word in f:
         #         keyword = key_word.strip()
         #         yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
-        #
-        keyword = "series"
-        yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
 
-        # ssdb_con = SSDBCon().connection()
-        # for i in range(50000):
-        #     item = ssdb_con.lpop("baidu_word_urls")
-        #     keyword = item.decode("utf8")
-        #     yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
+        # keyword = "series"
+        # yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
+
+        ssdb_con = SSDBCon().connection()
+        for i in range(50000):
+            item = ssdb_con.lpop("baidu_word_urls")
+            keyword = item.decode("utf8")
+            yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
 
     def parse(self, response):
         # windows_gtk = re.findall(";window.gtk = (.*?);</script>", response.text)[0][1:-1]
@@ -48,8 +48,8 @@ class TranslateBaiduSpider(scrapy.Spider):
         node = BaiDuTranslateJS()
         sign = node.get_sign(query, windows_gtk)
 
-        url = "https://fanyi.baidu.com/v2transapi?from=en&to=zh"
-        url = "https://fanyi.baidu.com/gettts?lan=uk&text=series&spd=3&source=web"
+        # url = "https://fanyi.baidu.com/v2transapi?from=en&to=zh"
+        url = "https://fanyi.baidu.com/gettts?lan=uk&text={}&spd=3&source=web".format(query)
         data = {
             'from': 'en',
             'to': "zh",
@@ -72,7 +72,7 @@ class TranslateBaiduSpider(scrapy.Spider):
                                  meta={"keyword": query})
 
     def parse_item(self, response):
-        with open('{}.mp3'.format(response.meta.get("keyword")), 'wb')as f:
+        with open(r'.\files\video\{}_baidu.mp3'.format(response.meta.get("keyword")), 'wb')as f:
             f.write(response.body)
 
         # 获取音标
