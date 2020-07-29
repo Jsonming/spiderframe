@@ -17,22 +17,22 @@ class TranslateBaiduSpider(scrapy.Spider):
     allowed_domains = ['fanyi.baidu.com/translate']
     start_urls = ['http://www.baidu.com']
     custom_setting = {
-        "DOWNLOAD_DELAY": 2
+        "DOWNLOAD_DELAY": 0.3
     }
 
     def start_requests(self):
         url = 'http://fanyi.baidu.com/translate/'
 
-        # with open(r'.\files\ten.txt', 'r', encoding='utf8')as f:
-        #     for key_word in f:
-        #         keyword = key_word.strip()
+        # with open(r'./files/data.txt', 'r', encoding='utf8')as f:
+        #     for key_word in f.readlines()[6440:]:
+        #         keyword = key_word.strip().split("\t")[0]
         #         yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
 
         # keyword = "series"
         # yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
 
         ssdb_con = SSDBCon().connection()
-        for i in range(50000):
+        for i in range(200000):
             item = ssdb_con.lpop("baidu_word_urls")
             keyword = item.decode("utf8")
             yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
@@ -72,7 +72,7 @@ class TranslateBaiduSpider(scrapy.Spider):
                                  meta={"keyword": query})
 
     def parse_item(self, response):
-        with open(r'.\files\video\{}_baidu.mp3'.format(response.meta.get("keyword")), 'wb')as f:
+        with open(r'E:\video\baidu\{}_baidu.mp3'.format(response.meta.get("keyword")), 'wb')as f:
             f.write(response.body)
 
         # 获取音标

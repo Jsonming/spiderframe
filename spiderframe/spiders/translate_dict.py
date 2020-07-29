@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
-import pandas as pd
+
 from spiderframe.items import SpiderframeItem
-from scrapy_redis.spiders import RedisSpider
 
 
 class TranslateDictSpider(scrapy.Spider):
@@ -23,14 +22,15 @@ class TranslateDictSpider(scrapy.Spider):
     def start_requests(self):
         # with open(r'D:\Workspace\workspace\work\English_word\lower_word.txt', 'r', encoding='utf8')as f:
 
-        file = r"C:\Users\Administrator\Desktop\其他来源含有英式美式(来源相同)72981.xlsx"
-        data = pd.read_excel(file)
-        words = data.loc[data["来源"] == "海词"]["待查单词"].to_list()
-
-        for key_word in words:
-            keyword = key_word.strip()
-            url = "https://dict.cn/search?q={keyword}".format(keyword=keyword)
-            yield scrapy.Request(url=url, callback=self.parse, meta={'keyword': keyword}, dont_filter=True)
+        # file = r"C:\Users\Administrator\Desktop\其他来源含有英式美式(来源相同)72981.xlsx"
+        # data = pd.read_excel(file)
+        # words = data.loc[data["来源"] == "海词"]["待查单词"].to_list()
+        #
+        # for key_word in words:
+        #     keyword = key_word.strip()
+        #     url = "https://dict.cn/search?q={keyword}".format(keyword=keyword)
+        #     yield scrapy.Request(url=url, callback=self.parse, meta={'keyword': keyword}, dont_filter=True)
+        pass
 
     def parse(self, response):
         # sentens1 = response.xpath('//div[@class="layout sort"]//li//text()').extract()

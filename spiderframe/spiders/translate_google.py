@@ -13,26 +13,25 @@ class TranslateGoogleSpider(scrapy.Spider):
     allowed_domains = ['translate.google.cn']
     start_urls = ['http://translate.google.cn/']
     custom_settings = {
-        "DOWNLOAD_DELAY": 2
+        "DOWNLOAD_DELAY": 0.3
     }
 
     def start_requests(self):
         # 本地测试
-        # with open(r'../files/简单句单词总.txt', 'r', encoding='utf8')as f:
-        #     for key_word in f.readlines():
-        #         keyword = key_word.strip()
+        # with open(r'./files/data.txt', 'r', encoding='utf8')as f:
+        #     for key_word in f.readlines()[100:120]:
+        #         keyword = key_word.strip().split("\t")[0]
         #         keyword_len = len(keyword)
         #         pj = Py4Js()
         #         tk = pj.get_tk(keyword)
-        #         url = "https://translate.google.cn/translate_a/single?client=webapp&sl=en&tl=zh-CN&hl=zh-CN&dt=at&" \
-        #               "dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&ssel=3&tsel=3&kc=0" \
-        #       "&tk={tk}&q={keyword}".format(**locals())
-        # url = 'https://translate.google.cn/translate_tts?ie=UTF-8&q={keyword}&tl=en&total=1&idx=0' \
-        #       '&textlen={keyword_len}&tk={tk}&client=webapp&prev=input'.format(**locals())
-        # yield scrapy.Request(url=url, callback=self.parse, dont_filter=True, meta={"keyword": keyword})
+        #         # url = "https://translate.google.cn/translate_a/single?client=webapp&sl=en&tl=zh-CN&hl=zh-CN&dt=at&" \
+        #         #       "dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&ssel=3&tsel=3&kc=0&tk={tk}&q={keyword}".format(**locals())
+        #         url = 'https://translate.google.cn/translate_tts?ie=UTF-8&q={keyword}&tl=en&total=1&idx=0' \
+        #               '&textlen={keyword_len}&tk={tk}&client=webapp&prev=input'.format(**locals())
+        #         yield scrapy.Request(url=url, callback=self.parse, dont_filter=True, meta={"keyword": keyword})
 
         ssdb_con = SSDBCon().connection()
-        for i in range(70000):
+        for i in range(200000):
             item = ssdb_con.lpop("google_word_urls")
             keyword = item.decode("utf8")
             keyword_len = len(keyword)
@@ -49,7 +48,7 @@ class TranslateGoogleSpider(scrapy.Spider):
 
     def parse(self, response):
         # 抓读音
-        with open(r'.\files\video\{}_google.mp3'.format(response.meta.get("keyword")), 'wb')as f:
+        with open(r'E:\video\google\{}_google.mp3'.format(response.meta.get("keyword")), 'wb')as f:
             f.write(response.body)
 
         # 抓取读音
