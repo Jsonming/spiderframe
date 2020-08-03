@@ -30,6 +30,7 @@ from spiderframe.spiders.English_corpus_gutenberg_new import EnglishCorpusGutenb
 from spiderframe.spiders.translate_dict import TranslateDictSpider
 from spiderframe.spiders.translate_bing import TranslateBingSpider
 from spiderframe.spiders.translate_cnki import TranslateCnkiSpider
+from spiderframe.spiders.translate_iciba import TranslateIcibaSpider
 from spiderframe.spiders.English_corpus_genlib import EnglishCorpusGenlibSpider
 
 from spiderframe.spiders.sweden_sydsvenskan_content import SwedenSydsvenskanContentSpider
@@ -44,6 +45,7 @@ from spiderframe.spiders.Switzerland_tagesanzeiger_content import SwitzerlandTag
 from spiderframe.spiders.Greece_enet_content import GreeceEnetContentSpider
 from spiderframe.spiders.Denmark_politiken_content import DenmarkPolitikenContentSpider
 from spiderframe.spiders.Netherlands_nrc_content import NetherlandsNrcContentSpider
+
 
 from . import settings
 
@@ -172,6 +174,19 @@ class MySQLPipeline(object):
                     item['title'],
                 )
                 sql = "update English_word_phonetic set youdao_show_word=%s,youdao_en_phonetic=%s,youdao_am_phonetic=%s,youdao_uncertain_phonetic=%s where word=%s"
+                self.db_cur.execute(sql, values)
+                self.db_conn.commit()
+
+        elif isinstance(spider, TranslateIcibaSpider):
+            if item:
+                values = (
+                    item['category'],
+                    item['content'],
+                    item['item_name'],
+                    item['item_id'],
+                    item['title'],
+                )
+                sql = "update second_word_phonetic set iciba_show_word=%s,iciba_en_phonetic=%s,iciba_am_phonetic=%s,iciba_uncertain_phonetic=%s where word=%s"
                 self.db_cur.execute(sql, values)
                 self.db_conn.commit()
 
