@@ -3,17 +3,24 @@ import scrapy
 import re
 import json
 from spiderframe.items import SpiderframeItem
+from spiderframe.common.db import SSDBCon
 
 
 class TranslateIcibaSpider(scrapy.Spider):
     name = 'translate_iciba'
     allowed_domains = ['www.iciba.com']
     start_urls = ['http://www.iciba.com/']
+    custom_settings = {
+        "DOWNLOAD_DELAY": 0.3
+    }
 
     def start_requests(self):
-        keyword = "illovo"
-        url = "http://www.iciba.com/word?w={}".format(keyword)
-        yield scrapy.Request(url=url, callback=self.parse, dont_filter=True, meta={"keyword": keyword})
+        ssdb_con = SSDBCon().connection()
+        for i in range(200000):
+            item = ssdb_con.lpop("iciba_word_urls")
+            keyword = item.decode("utf8")
+            url = "http://www.iciba.com/word?w={}".format(keyword)
+            yield scrapy.Request(url=url, callback=self.parse, dont_filter=True, meta={"keyword": keyword})
 
     def parse(self, response):
         json_data_string = re.findall('<script id="__NEXT_DATA__" type="application/json">(.*?)</script>',
