@@ -32,7 +32,7 @@ from spiderframe.spiders.translate_bing import TranslateBingSpider
 from spiderframe.spiders.translate_cnki import TranslateCnkiSpider
 from spiderframe.spiders.translate_iciba import TranslateIcibaSpider
 from spiderframe.spiders.English_corpus_genlib import EnglishCorpusGenlibSpider
-
+from spiderframe.spiders.translate_oxfordlearners import TranslateOxfordlearnersSpider
 from spiderframe.spiders.sweden_sydsvenskan_content import SwedenSydsvenskanContentSpider
 from spiderframe.spiders.Egypt_masrawy_content import EgyptMasrawyContentSpider
 from spiderframe.spiders.Finland_hs_content import FinlandHsContentSpider
@@ -187,6 +187,18 @@ class MySQLPipeline(object):
                     item['title'],
                 )
                 sql = "update second_word_phonetic set iciba_show_word=%s,iciba_en_phonetic=%s,iciba_am_phonetic=%s,iciba_uncertain_phonetic=%s where word=%s"
+                self.db_cur.execute(sql, values)
+                self.db_conn.commit()
+
+        elif isinstance(spider, TranslateOxfordlearnersSpider):
+            if item:
+                values = (
+                    item['category'],
+                    item['content'],
+                    item['item_name'],
+                    item['title'],
+                )
+                sql = "update second_word_phonetic set oxfordlearners_show_word=%s,oxfordlearners_en_phonetic=%s,oxfordlearners_am_phonetic=%s,where word=%s"
                 self.db_cur.execute(sql, values)
                 self.db_conn.commit()
 
