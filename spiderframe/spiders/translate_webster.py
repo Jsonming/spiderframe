@@ -1,21 +1,44 @@
 # -*- coding: utf-8 -*-
 import re
 import scrapy
+from spiderframe.items import SpiderframeItem
+from spiderframe.common.db import SSDBCon
 
 
 class TranslateWebsterSpider(scrapy.Spider):
     name = 'translate_webster'
     allowed_domains = ['www.merriam-webster.com']
-    # start_urls = ['https://www.merriam-webster.com/browse/thesaurus/{}'.format(chr(i)) for i in
-    #               range(ord("b"), ord("z") + 1)]
-    start_urls = ["https://www.merriam-webster.com/browse/thesaurus/a"]
+    start_urls = ["https://www.merriam-webster.com/dictionary/accession"]
+
+    def start_requests(self):
+        # keyword = "words"
+        # url = "https://www.merriam-webster.com/dictionary/{}".format(keyword)
+        # yield scrapy.Request(url=url, callback=self.parse, dont_filter=True, meta={"keyword": keyword})
+
+        ssdb_con = SSDBCon().connection()
+        for i in range(200000):
+            item = ssdb_con.lpop("webster_word_urls")
+            keyword = item.decode("utf8")
+            url = "https://www.oxfordlearnersdictionaries.com/definition/english/{keyword}?q={keyword}".format(keyword=keyword)
+            yield scrapy.Request(url=url, callback=self.parse, dont_filter=True, meta={"keyword": keyword})
 
     def parse(self, response):
-        words = response.xpath('//div[@class="entries"]//a/text()').extract()
-        with open(r'D:\Workspace\spiderframe\spiderframe\files\webster_word.txt', 'a', encoding='utf8')as f:
-            for word in words:
-                f.write(word + "\n")
+        keyword = response.meta.get("keyword")
+        show_word_l = response.xpath('//*[@id="left-content"]/div[1]/div[1]/h1/text()').extract()
+        if show_word_l:
+            show_word = show_word_l[0]
+        else:
+            show_word = ""
+        un_phonetic_l = response.xpath('//*[@id="left-content"]/div[3]/div/span/span[@class="pr"]/text()').extract()
+        if un_phonetic_l:
+            un_phonetic = un_phonetic_l[0]
+        else:
+            un_phonetic = ""
 
-        next_page = response.xpath('//ul[@class="pagination"]/li[@class="next"]/a/@href').extract()
-        next_url = "https://www.merriam-webster.com" + next_page[0]
-        yield scrapy.Request(url=next_url, callback=self.parse, dont_filter=True)
+        item = SpiderframeItem()
+        item['title'] = keyword  # title  字段 存单词
+        item['category'] = show_word  # category 存显示的单词
+        item['content'] = ""  # content 字段存 英式英语
+        item['item_name'] = ""  # item_name 字段  美式英语
+        item['item_id'] = un_phonetic  # item_id 字段  不确定是英式还是美式的情况
+        yield item
