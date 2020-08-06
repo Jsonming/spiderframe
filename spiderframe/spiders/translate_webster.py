@@ -19,7 +19,7 @@ class TranslateWebsterSpider(scrapy.Spider):
         for i in range(200000):
             item = ssdb_con.lpop("webster_word_urls")
             keyword = item.decode("utf8")
-            url = "https://www.oxfordlearnersdictionaries.com/definition/english/{keyword}?q={keyword}".format(keyword=keyword)
+            url = "https://www.merriam-webster.com/dictionary/{}".format(keyword)
             yield scrapy.Request(url=url, callback=self.parse, dont_filter=True, meta={"keyword": keyword})
 
     def parse(self, response):
