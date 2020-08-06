@@ -150,7 +150,7 @@ class MySQLPipeline(object):
                     item['item_name'],
                     item['title'],
                 )
-                sql = "update English_word_phonetic set baidu_show_word=%s,baidu_en_phonetic=%s,baidu_am_phonetic=%s where word=%s"
+                sql = "update third_word_phonetic set baidu_show_word=%s,baidu_en_phonetic=%s,baidu_am_phonetic=%s where word=%s"
                 self.db_cur.execute(sql, values)
                 self.db_conn.commit()
 
@@ -175,7 +175,7 @@ class MySQLPipeline(object):
                     item['item_id'],
                     item['title'],
                 )
-                sql = "update English_word_phonetic set youdao_show_word=%s,youdao_en_phonetic=%s,youdao_am_phonetic=%s,youdao_uncertain_phonetic=%s where word=%s"
+                sql = "update third_word_phonetic set youdao_show_word=%s,youdao_en_phonetic=%s,youdao_am_phonetic=%s,youdao_uncertain_phonetic=%s where word=%s"
                 self.db_cur.execute(sql, values)
                 self.db_conn.commit()
 
