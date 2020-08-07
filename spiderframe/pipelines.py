@@ -3,6 +3,7 @@
 import hashlib
 import os
 import sys
+
 # Define your item pipelines here
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
@@ -12,43 +13,22 @@ import redis
 from scrapy.pipelines.images import ImagesPipeline
 
 from spiderframe.items import ImgsItem
-from spiderframe.items import SpiderframeItem
-from spiderframe.spiders.vietnam_news_vn_link import VietnamNewsVnLinkSpider
-from spiderframe.spiders.video_bilibili_link import VideoBilibiliLinkSpider
-from spiderframe.spiders.video_baidu_link import VideoBaiduLinkSpider
-from spiderframe.spiders.vietnam_news_vn_content import VietnamNewsVnContentSpider
-from spiderframe.spiders.vietnam_speaking_sentence import VietnamSpeakingSentenceSpider
-from spiderframe.spiders.china_news_people_content import ChinaNewsPeopleContentSpider
-from spiderframe.spiders.english_speaking_ted_link import EnglishSpeakingTedLinkSpider
-from spiderframe.spiders.china_speechocean_link import ChinaSpeechoceanLinkSpider
-from spiderframe.spiders.hebrew_walla_content import HebrewWallaContentSpider
-from spiderframe.spiders.translate_google import TranslateGoogleSpider
-from spiderframe.spiders.translate_baidu import TranslateBaiduSpider
-from spiderframe.spiders.translate_youdao import TranslateYoudaoSpider
-from spiderframe.spiders.English_corpus_gutenberg import EnglishCorpusGutenbergSpider
+from spiderframe.spiders.Egypt_masrawy_content import EgyptMasrawyContentSpider
+from spiderframe.spiders.English_corpus_genlib import EnglishCorpusGenlibSpider
 from spiderframe.spiders.English_corpus_gutenberg_new import EnglishCorpusGutenbergNewSpider
-from spiderframe.spiders.translate_dict import TranslateDictSpider
+from spiderframe.spiders.Greece_enet_content import GreeceEnetContentSpider
+from spiderframe.spiders.Netherlands_nrc_content import NetherlandsNrcContentSpider
+from spiderframe.spiders.translate_baidu import TranslateBaiduSpider
 from spiderframe.spiders.translate_bing import TranslateBingSpider
 from spiderframe.spiders.translate_cnki import TranslateCnkiSpider
+from spiderframe.spiders.translate_collins import TranslateCollinsSpider
+from spiderframe.spiders.translate_dict import TranslateDictSpider
+from spiderframe.spiders.translate_google import TranslateGoogleSpider
 from spiderframe.spiders.translate_iciba import TranslateIcibaSpider
-from spiderframe.spiders.English_corpus_genlib import EnglishCorpusGenlibSpider
 from spiderframe.spiders.translate_oxfordlearners import TranslateOxfordlearnersSpider
 from spiderframe.spiders.translate_webster import TranslateWebsterSpider
-from spiderframe.spiders.translate_collins import TranslateCollinsSpider
-from spiderframe.spiders.sweden_sydsvenskan_content import SwedenSydsvenskanContentSpider
-from spiderframe.spiders.Egypt_masrawy_content import EgyptMasrawyContentSpider
-from spiderframe.spiders.Finland_hs_content import FinlandHsContentSpider
-from spiderframe.spiders.Greece_tanea_content import GreeceTaneaContentSpider
-from spiderframe.spiders.Netherlands_ad_content import NetherlandsAdContentSpider
-from spiderframe.spiders.Norway_dagbladet_content import NorwayDagbladetContentSpider
-from spiderframe.spiders.Poland_newsweek_content import PolandNewsweekContentSpider
-from spiderframe.spiders.sweden_aftonbladet_content import SwedenAftonbladeContentSpider
-from spiderframe.spiders.Switzerland_tagesanzeiger_content import SwitzerlandTagesanzeigerContentSpider
-from spiderframe.spiders.Greece_enet_content import GreeceEnetContentSpider
-from spiderframe.spiders.Denmark_politiken_content import DenmarkPolitikenContentSpider
-from spiderframe.spiders.Netherlands_nrc_content import NetherlandsNrcContentSpider
-
-
+from spiderframe.spiders.translate_youdao import TranslateYoudaoSpider
+from spiderframe.spiders.translate_ldoceonline import TranslateLdoceonlineSpider
 from . import settings
 
 
@@ -229,6 +209,20 @@ class MySQLPipeline(object):
                 sql = "update second_word_phonetic set collins_show_word=%s,collins_en_phonetic=%s,collins_am_phonetic=%s,collins_uncertain_phonetic=%s where word=%s"
                 self.db_cur.execute(sql, values)
                 self.db_conn.commit()
+
+        elif isinstance(spider, TranslateLdoceonlineSpider):
+            if item:
+                values = (
+                    item['category'],
+                    item['content'],
+                    item['item_name'],
+                    item['item_id'],
+                    item['title'],
+                )
+                sql = "update second_word_phonetic set ldoceonline_show_word=%s,ldoceonline_en_phonetic=%s,ldoceonline_am_phonetic=%s,ldoceonline_uncertain_phonetic=%s where word=%s"
+                self.db_cur.execute(sql, values)
+                self.db_conn.commit()
+
 
         elif isinstance(spider, TranslateBingSpider):
             if item:
