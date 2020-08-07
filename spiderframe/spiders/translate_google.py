@@ -32,7 +32,7 @@ class TranslateGoogleSpider(scrapy.Spider):
 
         ssdb_con = SSDBCon().connection()
         for i in range(200000):
-            item = ssdb_con.lpop("google_word_urls")
+            item = ssdb_con.lpop("google_video_word_urls")
             keyword = item.decode("utf8")
             keyword_len = len(keyword)
             pj = Py4Js()
