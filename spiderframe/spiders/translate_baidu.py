@@ -28,14 +28,14 @@ class TranslateBaiduSpider(scrapy.Spider):
         #         keyword = key_word.strip().split("\t")[0]
         #         yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
 
-        keyword = "series"
-        yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
+        # keyword = "series"
+        # yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
 
-        # ssdb_con = SSDBCon().connection()
-        # for i in range(200000):
-        #     item = ssdb_con.lpop("baidu_word_urls")
-        #     keyword = item.decode("utf8")
-        #     yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
+        ssdb_con = SSDBCon().connection()
+        for i in range(200000):
+            item = ssdb_con.lpop("baidu_word_urls")
+            keyword = item.decode("utf8")
+            yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
 
     def parse(self, response):
         # windows_gtk = re.findall(";window.gtk = (.*?);</script>", response.text)[0][1:-1]
@@ -96,8 +96,7 @@ class TranslateBaiduSpider(scrapy.Spider):
         item['category'] = word  # category 存显示的单词
         item['content'] = ph_en  # content 字段存 英式英语
         item['item_name'] = ph_am  # category 字段  美式英语
-        print(item)
-        # yield item
+        yield item
 
         # print(ph_en, ph_am)
         # with open(r'D:\Workspace\spiderframe\spiderframe\files\baidu_phonetic.txt', 'a', encoding='utf8')as f:
