@@ -30,6 +30,7 @@ from spiderframe.spiders.translate_webster import TranslateWebsterSpider
 from spiderframe.spiders.translate_youdao import TranslateYoudaoSpider
 from spiderframe.spiders.translate_ldoceonline import TranslateLdoceonlineSpider
 from spiderframe.spiders.translate_dictionary import TranslateDictionarySpider
+from spiderframe.spiders.translate_macmillan import TranslateMacmillanSpider
 from . import settings
 
 
@@ -234,6 +235,19 @@ class MySQLPipeline(object):
                     item['title'],
                 )
                 sql = "update second_word_phonetic set dictionary_show_word=%s,dictionary_en_phonetic=%s,dictionary_am_phonetic=%s,dictionary_uncertain_phonetic=%s where word=%s"
+                self.db_cur.execute(sql, values)
+                self.db_conn.commit()
+
+        elif isinstance(spider, TranslateMacmillanSpider):
+            if item:
+                values = (
+                    item['category'],
+                    item['content'],
+                    item['item_name'],
+                    item['item_id'],
+                    item['title'],
+                )
+                sql = "update second_word_phonetic set macmillan_show_word=%s,macmillan_en_phonetic=%s,macmillan_am_phonetic=%s,macmillan_uncertain_phonetic=%s where word=%s"
                 self.db_cur.execute(sql, values)
                 self.db_conn.commit()
 
