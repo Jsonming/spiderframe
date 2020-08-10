@@ -17,7 +17,7 @@ class TranslateBaiduSpider(scrapy.Spider):
     allowed_domains = ['fanyi.baidu.com/translate']
     start_urls = ['http://www.baidu.com']
     custom_setting = {
-        "DOWNLOAD_DELAY": 0.3
+        "DOWNLOAD_DELAY": 0.1
     }
 
     def start_requests(self):
@@ -49,7 +49,7 @@ class TranslateBaiduSpider(scrapy.Spider):
         sign = node.get_sign(query, windows_gtk)
 
         # url = "https://fanyi.baidu.com/v2transapi?from=en&to=zh"
-        url = "https://fanyi.baidu.com/gettts?lan=uk&text={}&spd=3&source=web".format(query)
+        url = "https://fanyi.baidu.com/gettts?lan=en&text={}&spd=3&source=web".format(query)
         data = {
             'from': 'en',
             'to': "zh",
