@@ -9,3 +9,4 @@
 from scrapy import cmdline
 
 cmdline.execute("scrapy crawl translate_google".split())
+# cmdline.execute("scrapy crawl translate_baidu".split())

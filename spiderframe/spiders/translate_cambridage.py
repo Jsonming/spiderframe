@@ -2,6 +2,8 @@
 import scrapy
 
 from spiderframe.items import SpiderframeItem
+from spiderframe.items import SpiderframeItem
+from spiderframe.common.db import SSDBCon
 
 
 class TranslateCambridageSpider(scrapy.Spider):
@@ -12,6 +14,18 @@ class TranslateCambridageSpider(scrapy.Spider):
     custom_setting = {
         "DOWNLOAD_DELAY": 2
     }
+
+    def start_requests(self):
+        # keyword = "words"
+        # url = "https://dictionary.cambridge.org/dictionary/english/{}".format(keyword)
+        # yield scrapy.Request(url=url, callback=self.parse, dont_filter=True, meta={"keyword": keyword})
+
+        ssdb_con = SSDBCon().connection()
+        for i in range(200000):
+            item = ssdb_con.lpop("cambridage_word_urls")
+            keyword = item.decode("utf8")
+            url = "https://dictionary.cambridge.org/dictionary/english/{}".format(keyword)
+            yield scrapy.Request(url=url, callback=self.parse, dont_filter=True, meta={"keyword": keyword})
 
     def parse(self, response):
         word = response.url.split("/")[-1].split("=")[-1]
