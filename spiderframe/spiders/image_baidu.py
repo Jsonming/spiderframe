@@ -11,18 +11,34 @@ from spiderframe.items import ImgsItem
 class ImageBaiduSpider(scrapy.Spider):
     name = 'image_baidu'
 
-    def __init__(self, category="字体设计 创意 手绘", *args, **kwargs):
+    def __init__(self, category="大雾天汽车图片", *args, **kwargs):
         super(ImageBaiduSpider, self).__init__(*args, **kwargs)
         self.category = category
 
     def start_requests(self):
-        for j in range(0, 600, 30):
-            for z in [3, 9]:
-                url = "https://image.baidu.com/search/acjson?tn=resultjson_com&ipn=rj&ct=201326592&is=&fp=result&" \
-                      "queryWord={category}&cl=2&lm=-1&ie=utf-8&oe=utf-8&adpicid=&st=&z={z}&ic=&hd=1&latest=0&copyright" \
-                      "=0&word={category}&s=&se=&tab=&width=0&height=0&face=&istype=&qc=&nc=&fr=&expermode=&force=&pn={j}" \
-                      "&rn=30&gsm=1a4&1564384419589=".format(category=quote(self.category), j=j, z=z)  # 9 表示特大图  3大尺寸 2中
-                yield scrapy.Request(url=url, callback=self.parse, dont_filter=True)
+        categorys = [
+            "大雾天汽车图片",
+            "大雾汽车",
+            "大雾天气汽车",
+            "大雾天气汽车图片",
+            "大雾天交通",
+            "大雾天交通图片",
+            "大雾高速路",
+            "大雾高速堵车",
+            "大雾高速堵车照片",
+            "大雾天气行车",
+            "汽车大雾天气",
+
+        ]
+        for category in categorys:
+            for j in range(0, 330, 30):
+                for z in [9, 3]:
+                    url = "https://image.baidu.com/search/acjson?tn=resultjson_com&ipn=rj&ct=201326592&is=" \
+                          "&fp=result&queryWord={category}&cl=2&lm=-1&ie=utf-8&oe=utf-8&adpicid=&st=-1&z={z}&ic=" \
+                          "0&hd=&latest=&copyright=&word={category}&s=&se=&tab=&width=0&height=0&face=0&istype=2&qc" \
+                          "=&nc=1&fr=&expermode=&force=&pn={j}&rn=30&gsm=1e&1597389275397=".format(
+                        category=quote(category), j=j, z=z)  # 9 表示特大图  3大尺寸 2中
+                    yield scrapy.Request(url=url, callback=self.parse, dont_filter=True)
 
     def parse(self, response):
         resp = json.loads(response.text)

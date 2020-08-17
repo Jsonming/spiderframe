@@ -8,5 +8,4 @@
 
 from scrapy import cmdline
 
-cmdline.execute("scrapy crawl translate_google".split())
-# cmdline.execute("scrapy crawl translate_baidu".split())
+cmdline.execute("scrapy crawl image_google".split())

@@ -80,11 +80,12 @@ class MySQLPipeline(object):
 
     def process_item(self, item, spider):
         if isinstance(item, ImgsItem):
-            image_urls = item["image_urls"]
-            for url in image_urls:
-                thumb_guid = hashlib.sha1(url.encode('utf8')).hexdigest()
-                sql = 'INSERT INTO Img(img_name, url) VALUES(%s,%s)'
-                self.db_cur.execute(sql, (thumb_guid, url))
+            # image_urls = item["image_urls"]
+            # for url in image_urls:
+            #     thumb_guid = hashlib.sha1(url.encode('utf8')).hexdigest()
+            #     sql = 'INSERT INTO Img(img_name, url) VALUES(%s,%s)'
+            #     self.db_cur.execute(sql, (thumb_guid, url))
+            pass
 
         if isinstance(spider, GreeceEnetContentSpider):
             values = (

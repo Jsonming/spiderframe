@@ -28,7 +28,7 @@ class TranslateCambridageSpider(scrapy.Spider):
             yield scrapy.Request(url=url, callback=self.parse, dont_filter=True, meta={"keyword": keyword})
 
     def parse(self, response):
-        word = response.url.split("/")[-1].split("=")[-1]
+        word = response.meta.get("keyword")
         show_word, uk_phonetic, us_phonetic = '', '', ''
         di_title = response.xpath('//div[@class="di-title"]//span[@class="hw dhw"]')
         if di_title:
