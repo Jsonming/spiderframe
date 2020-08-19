@@ -184,7 +184,7 @@ class MySQLPipeline(object):
                     item['item_name'],
                     item['title'],
                 )
-                sql = "update second_word_phonetic set oxfordlearners_show_word=%s,oxfordlearners_en_phonetic=%s,oxfordlearners_am_phonetic=%s,where word=%s"
+                sql = "update second_word_phonetic set oxfordlearners_show_word=%s,oxfordlearners_en_phonetic=%s,oxfordlearners_am_phonetic=%s where word=%s"
                 self.db_cur.execute(sql, values)
                 self.db_conn.commit()
 

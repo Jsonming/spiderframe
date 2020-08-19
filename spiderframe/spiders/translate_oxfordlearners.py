@@ -17,12 +17,25 @@ class TranslateOxfordlearnersSpider(scrapy.Spider):
             url = "https://www.oxfordlearnersdictionaries.com/definition/english/{keyword}?q={keyword}".format(keyword=keyword)
             yield scrapy.Request(url=url, callback=self.parse, dont_filter=True, meta={"keyword": keyword})
 
+
     def parse(self, response):
-        show_word = response.xpath('//div[@class="webtop"]/h1/text()').extract()
-        ph_en = response.xpath(
+        show_word_r = response.xpath('//div[@class="webtop"]/h1/text()').extract()
+        if show_word_r:
+            show_word = show_word_r[0]
+        else:
+            show_word = ''
+        ph_en_r = response.xpath(
             '//div[@class="webtop"]/span[@class="phonetics"]/div[@class="phons_br"]/span/text()').extract()
-        ph_am = response.xpath(
+        if ph_en_r:
+            ph_en = ph_en_r[0]
+        else:
+            ph_en = ''
+        ph_am_r = response.xpath(
             '//div[@class="webtop"]/span[@class="phonetics"]/div[@class="phons_n_am"]/span/text()').extract()
+        if ph_am_r:
+            ph_am = ph_am_r[0]
+        else:
+            ph_am = ''
 
         item = SpiderframeItem()
         item['title'] = response.meta.get("keyword")  # title  字段 存单词
