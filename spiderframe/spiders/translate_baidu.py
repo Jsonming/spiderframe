@@ -17,17 +17,11 @@ class TranslateBaiduSpider(scrapy.Spider):
     allowed_domains = ['fanyi.baidu.com/translate']
     start_urls = ['http://www.baidu.com']
     custom_setting = {
-        "DOWNLOAD_DELAY": 3
+        "DOWNLOAD_DELAY": 1.5
     }
 
     def start_requests(self):
         url = 'http://fanyi.baidu.com/translate/'
-
-        # with open(r'./files/data.txt', 'r', encoding='utf8')as f:
-        #     for key_word in f.readlines()[6440:]:
-        #         keyword = key_word.strip().split("\t")[0]
-        #         yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
-
         # keyword = "apply"
         # yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
 

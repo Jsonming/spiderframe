@@ -29,7 +29,8 @@ class TranslateIcibaSpider(scrapy.Spider):
             json_data = json.loads(json_data_string[0])
             base_info = json_data.get("props", {}).get("initialDvaState", {}).get("word", {}).get("wordInfo", {}).get(
                 "baesInfo", {})
-            word_name = base_info.get("word_name", "")
+            word_info = json_data.get("props", {}).get("initialDvaState", {}).get("word", {}).get("wordInfo", {})
+            word_name = word_info.get("word_name", "")
             ph_en_l = base_info.get("symbols", [])
             if ph_en_l:
                 ph_en = ph_en_l[0].get("ph_en", "")  # 英式读音
