@@ -14,7 +14,7 @@ class TranslateOxfordlearnersSpider(scrapy.Spider):
         for i in range(200000):
             item = ssdb_con.lpop("oxfordlearners_word_urls")
             keyword = item.decode("utf8")
-            url = "https://www.oxfordlearnersdictionaries.com/definition/english/{keyword}?q={keyword}".format(keyword=keyword)
+            url = "https://www.oxfordlearnersdictionaries.com/search/english/direct/?q={keyword}".format(keyword=keyword)
             yield scrapy.Request(url=url, callback=self.parse, dont_filter=True, meta={"keyword": keyword})
 
 
