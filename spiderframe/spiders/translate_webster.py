@@ -11,16 +11,16 @@ class TranslateWebsterSpider(scrapy.Spider):
     start_urls = ["https://www.merriam-webster.com/dictionary/accession"]
 
     def start_requests(self):
-        # keyword = "words"
-        # url = "https://www.merriam-webster.com/dictionary/{}".format(keyword)
-        # yield scrapy.Request(url=url, callback=self.parse, dont_filter=True, meta={"keyword": keyword})
+        keyword = "immortalise"
+        url = "https://www.merriam-webster.com/dictionary/{}".format(keyword)
+        yield scrapy.Request(url=url, callback=self.parse, dont_filter=True, meta={"keyword": keyword})
 
-        ssdb_con = SSDBCon().connection()
-        for i in range(200000):
-            item = ssdb_con.lpop("webster_word_urls")
-            keyword = item.decode("utf8")
-            url = "https://www.merriam-webster.com/dictionary/{}".format(keyword)
-            yield scrapy.Request(url=url, callback=self.parse, dont_filter=True, meta={"keyword": keyword})
+        # ssdb_con = SSDBCon().connection()
+        # for i in range(200000):
+        #     item = ssdb_con.lpop("webster_word_urls")
+        #     keyword = item.decode("utf8")
+        #     url = "https://www.merriam-webster.com/dictionary/{}".format(keyword)
+        #     yield scrapy.Request(url=url, callback=self.parse, dont_filter=True, meta={"keyword": keyword})
 
     def parse(self, response):
         keyword = response.meta.get("keyword")

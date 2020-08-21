@@ -24,7 +24,7 @@ class TranslateBaiduSpider(scrapy.Spider):
         url = 'http://fanyi.baidu.com/translate/'
         # keyword = "apply"
         # yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
-
+        #
         ssdb_con = SSDBCon().connection()
         for i in range(200000):
             item = ssdb_con.lpop("baidu_word_urls")
@@ -76,6 +76,11 @@ class TranslateBaiduSpider(scrapy.Spider):
 
         dict_result = json_data.get("dict_result", {})
         try:
+            show_word = dict_result.get("simple_means", {}).get("word_name")
+        except Exception as e:
+            show_word = ""
+
+        try:
             ph_en = dict_result.get("simple_means", {}).get("symbols")[0].get("ph_en")
         except Exception as e:
             ph_en = ""
@@ -87,7 +92,7 @@ class TranslateBaiduSpider(scrapy.Spider):
 
         item = SpiderframeItem()
         item['title'] = word  # title  字段 存单词
-        item['category'] = word  # category 存显示的单词
+        item['category'] = show_word  # category 存显示的单词
         item['content'] = ph_en  # content 字段存 英式英语
         item['item_name'] = ph_am  # category 字段  美式英语
         yield item
