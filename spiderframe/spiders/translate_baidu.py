@@ -17,7 +17,7 @@ class TranslateBaiduSpider(scrapy.Spider):
     allowed_domains = ['fanyi.baidu.com/translate']
     start_urls = ['http://www.baidu.com']
     custom_setting = {
-        "DOWNLOAD_DELAY": 0.5
+        "DOWNLOAD_DELAY": 0.3
     }
 
     def start_requests(self):
