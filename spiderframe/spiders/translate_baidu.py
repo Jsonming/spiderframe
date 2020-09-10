@@ -22,7 +22,7 @@ class TranslateBaiduSpider(scrapy.Spider):
 
     def start_requests(self):
         url = 'http://fanyi.baidu.com/translate/'
-        # keyword = "panthon"
+        # keyword = "Appenans"
         # yield scrapy.Request(url=url, meta={"query": keyword}, callback=self.parse, dont_filter=True)
 
         ssdb_con = SSDBCon().connection()
@@ -44,26 +44,27 @@ class TranslateBaiduSpider(scrapy.Spider):
 
         # url = "https://fanyi.baidu.com/v2transapi?from=en&to=zh"
         url = "https://fanyi.baidu.com/gettts?lan=en&text={}&spd=3&source=web".format(query)
-        data = {
-            'from': 'en',
-            'to': "zh",
-            "query": query,
-            "transtype": 'translang',
-            "simple_meas_flag": '3',
-            "sign": sign,
-            'token': token
-        }
-        header = {
-            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-            "cache-control": "no-cache",
-            "cookie": "BAIDUID=02725590C792FF940E803CB07B053FEA:"
-                      "FG=1; BIDUPSID=02725590C792FF940E803CB07B053FEA; "
-                      "PSTM=1557990196; "
-                      "to_lang_often=%5B%7B%22value%22%3A%22en%22%2C%22text%22%3A%22%u82F1%u8BED%22%7D%2C%7B%22value%22%3A%22zh%22%2C%22text%22%3A%22%u4E2D%u6587%22%7D%5D; "
-                      "REALTIME_TRANS_SWITCH=1; FANYI_WORD_SWITCH=1; SOUND_SPD_SWITCH=1; HISTORY_SWITCH=1; SOUND_PREFER_SWITCH=1; from_lang_often=%5B%7B%22value%22%3A%22zh%22%2C%22text%22%3A%22%u4E2D%u6587%22%7D%2C%7B%22value%22%3A%22en%22%2C%22text%22%3A%22%u82F1%u8BED%22%7D%5D; H_PS_PSSID=1445_21097_29921_29568_29220_26350; delPer=0; PSINO=2; BDORZ=B490B5EBF6F3CD402E515D22BCDA1598; Hm_lvt_64ecd82404c51e03dc91cb9e8c025574=1572508074,1572512679,1572512867,1572515669; yjs_js_security_passport=75fbfb6eb5e8b93053fdda8c6f15e8160a536f70_1572515753_js; Hm_lpvt_64ecd82404c51e03dc91cb9e8c025574=1572516236; __yjsv5_shitong=1.0_7_5c003f5356b4428943d8f74bb6c658efd893_300_1572516236513_123.58.106.254_79b85b3f"
-        }
-        yield scrapy.FormRequest(url=url, formdata=data, callback=self.parse_item, dont_filter=True, headers=header,
-                                 meta={"keyword": query})
+        # data = {
+        #     'from': 'en',
+        #     'to': "zh",
+        #     "query": query,
+        #     "transtype": 'translang',
+        #     "simple_meas_flag": '3',
+        #     "sign": sign,
+        #     'token': token
+        # }
+        # header = {
+        #     "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+        #     "cache-control": "no-cache",
+        #     "cookie": "BAIDUID=02725590C792FF940E803CB07B053FEA:"
+        #               "FG=1; BIDUPSID=02725590C792FF940E803CB07B053FEA; "
+        #               "PSTM=1557990196; "
+        #               "to_lang_often=%5B%7B%22value%22%3A%22en%22%2C%22text%22%3A%22%u82F1%u8BED%22%7D%2C%7B%22value%22%3A%22zh%22%2C%22text%22%3A%22%u4E2D%u6587%22%7D%5D; "
+        #               "REALTIME_TRANS_SWITCH=1; FANYI_WORD_SWITCH=1; SOUND_SPD_SWITCH=1; HISTORY_SWITCH=1; SOUND_PREFER_SWITCH=1; from_lang_often=%5B%7B%22value%22%3A%22zh%22%2C%22text%22%3A%22%u4E2D%u6587%22%7D%2C%7B%22value%22%3A%22en%22%2C%22text%22%3A%22%u82F1%u8BED%22%7D%5D; H_PS_PSSID=1445_21097_29921_29568_29220_26350; delPer=0; PSINO=2; BDORZ=B490B5EBF6F3CD402E515D22BCDA1598; Hm_lvt_64ecd82404c51e03dc91cb9e8c025574=1572508074,1572512679,1572512867,1572515669; yjs_js_security_passport=75fbfb6eb5e8b93053fdda8c6f15e8160a536f70_1572515753_js; Hm_lpvt_64ecd82404c51e03dc91cb9e8c025574=1572516236; __yjsv5_shitong=1.0_7_5c003f5356b4428943d8f74bb6c658efd893_300_1572516236513_123.58.106.254_79b85b3f"
+        # }
+        # yield scrapy.FormRequest(url=url, formdata=data, callback=self.parse_item, dont_filter=True, headers=header,
+        #                          meta={"keyword": query})
+        yield scrapy.Request(url=url,  callback=self.parse_item, dont_filter=True, meta={"keyword": query})
 
     def parse_item(self, response):
         with open(r'E:\video\baidu\{}_baidu.mp3'.format(response.meta.get("keyword")), 'wb')as f:

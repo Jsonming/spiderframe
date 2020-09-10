@@ -32,6 +32,7 @@ from spiderframe.spiders.translate_ldoceonline import TranslateLdoceonlineSpider
 from spiderframe.spiders.translate_dictionary import TranslateDictionarySpider
 from spiderframe.spiders.translate_macmillan import TranslateMacmillanSpider
 from spiderframe.spiders.translate_cambridage import TranslateCambridageSpider
+from spiderframe.spiders.china_zi_zidian_content import ChinaZiZidianContentSpider
 from . import settings
 
 
@@ -100,7 +101,7 @@ class MySQLPipeline(object):
             self.db_cur.execute(sql, values)
             self.db_conn.commit()
 
-        if isinstance(spider, NetherlandsNrcContentSpider):
+        elif isinstance(spider, NetherlandsNrcContentSpider):
             values = (
                 item['url'],
                 item['category'],
@@ -113,7 +114,7 @@ class MySQLPipeline(object):
             self.db_cur.execute(sql, values)
             self.db_conn.commit()
 
-        if isinstance(spider, EgyptMasrawyContentSpider):
+        elif isinstance(spider, EgyptMasrawyContentSpider):
             values = (
                 item['url'],
                 item['category'],
@@ -123,6 +124,21 @@ class MySQLPipeline(object):
 
             sql = 'INSERT INTO {db_name}(url,category,title,content) VALUES(%s,%s,%s,%s)'.format(
                 db_name="Egypt_masrawy_content")
+            self.db_cur.execute(sql, values)
+            self.db_conn.commit()
+
+        elif isinstance(spider, ChinaZiZidianContentSpider):
+            values = (
+                item['ori_url'],
+                item['url'],
+                item['content'],
+                item['title'],
+                item['item_id'],
+                item['item_name'],
+            )
+
+            sql = 'INSERT INTO {db_name}(page_url,url,content,title,item_id,item_name) VALUES(%s,%s,%s,%s,%s,%s)'.format(
+                db_name="china_zi_zidian_content")
             self.db_cur.execute(sql, values)
             self.db_conn.commit()
 
